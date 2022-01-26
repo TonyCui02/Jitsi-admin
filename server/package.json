@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": " <Your Name> (example.com)",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^14.3.0",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.7",
+    "nodemon": "^2.0.15"
+  }
+}
