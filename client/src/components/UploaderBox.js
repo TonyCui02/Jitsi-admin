@@ -11,6 +11,7 @@ import ImagePreview from "./ImagePreview";
 
 const ImageContainer = styled("span")(() => ({
   display: "inline-block",
+  height: "100%",
   position: "relative",
   margin: "0px 25px 0px 0px",
   flex: "1",
@@ -20,7 +21,6 @@ const ImageContainer = styled("span")(() => ({
 
 const PreviewImage = styled("img")(() => ({
   display: "block",
-  // height: "auto",
   width: "100%",
   borderRadius: "10px",
   transition: "opacity 0.3s",
@@ -48,30 +48,35 @@ const CustomIconButton = styled("button")(({ theme }) => ({
   },
 }));
 
-const UploaderBox = () => {
+const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
   const theme = useTheme();
   const [files, setFiles] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
 
   const handleImageDelete = () => {
     setFiles([]);
+    updateItemImage(index, "");
   };
 
   const handleImagePreview = () => {
     setPreviewVisible(true);
   };
 
-  const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    // console.log(acceptedFiles);
-    setFiles(
-      acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      )
-    );
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      // Do something with the files
+      // console.log(acceptedFiles);
+      setFiles(
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        )
+      );
+      updateItemImage(index, acceptedFiles[0].preview);
+    },
+    [index, updateItemImage]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -81,13 +86,13 @@ const UploaderBox = () => {
 
   return (
     <>
-      {files.length > 0 ? (
+      {imgUrl !== "" ? (
         <ImageContainer>
           <CustomIconButton onClick={() => handleImageDelete()}>
             <DeleteIcon />
           </CustomIconButton>
           <PreviewImage
-            src={files[0].preview}
+            src={imgUrl}
             alt="test"
             onClick={() => handleImagePreview()}
           />
@@ -149,10 +154,7 @@ const UploaderBox = () => {
         </CardActionArea>
       )}
       {previewVisible === true && (
-        <ImagePreview
-          setPreviewVisible={setPreviewVisible}
-          imageUrl={files[0].preview}
-        />
+        <ImagePreview setPreviewVisible={setPreviewVisible} imgUrl={imgUrl} />
       )}
     </>
   );

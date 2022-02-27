@@ -1,74 +1,110 @@
 import { useTheme } from "@emotion/react";
+import AddIcon from "@mui/icons-material/Add";
 import { Button, Container, Grid } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
-import MediaCard from "../components/MediaCard";
+import { useCallback, useEffect, useState } from "react";
 import MediaCardWrapper from "../components/MediaCardWrapper";
 import TopNavbar from "../components/TopNavbar";
-import AddIcon from "@mui/icons-material/Add";
 
 const HomePageLayout = () => {
   const theme = useTheme();
-  const [items, setItems] = useState([{ id: crypto.randomUUID }]);
+  const [items, setItems] = useState([
+    { imgUrl: "", title: "", description: "" },
+  ]);
 
   const addItem = () => {
     setItems([
       ...items,
       {
-        id: crypto.randomUUID(),
-        imgUrl: null,
+        imgUrl: "",
+        title: "",
+        description: "",
       },
     ]);
   };
 
-  const deleteItem = (id) => {
-    setItems(items.filter((item) => item.id !== id));
-  };
+  const deleteItem = useCallback((id) => {
+    setItems((prevItems) => prevItems.filter((item, index) => index !== id));
+  }, []); // No dependencies
 
-  const updateItem = (id, updatedItem) => {
-    const updatedItems = items.map((item) =>
-      item.id === id ? updatedItem : item
+  const updateItem = useCallback((id, newItem) => {
+    setItems((prevItems) =>
+      prevItems.map((item, index) => {
+        return index !== id ? item : newItem;
+      })
     );
-    setItems(updatedItems);
+  }, []); // No dependencies
+
+  const moveItemUp = useCallback((index) => {
+    setItems((prevItems) => [
+      ...prevItems.slice(0, index - 1),
+      prevItems[index],
+      prevItems[index - 1],
+      ...prevItems.slice(index + 1),
+    ]);
+  }, []); // No dependencies
+
+  const moveItemDown = useCallback((index) => {
+    setItems((prevItems) => [
+      ...prevItems.slice(0, index),
+      prevItems[index + 1],
+      prevItems[index],
+      ...prevItems.slice(index + 2),
+    ]);
+  }, []); // No dependencies
+
+  const addItemAfter = (index) => {
+    setItems([
+      ...items.slice(0, index + 1),
+      {
+        id: crypto.randomUUID(),
+        imgUrl: null,
+        title: "",
+        description: "",
+      },
+      ...items.slice(index + 1),
+    ]);
   };
 
-  const swapItems = (index1, index2) => {
-    setItems((items) => {
-      let data = [...items];
-      let temp = data[index1];
-      data[index1] = data[index2];
-      data[index2] = temp;
-      return data;
-    });
-  };
+  useEffect(() => {
+    console.log(items);
+  }, [items]);
 
   return (
     <Box
       sx={{
         backgroundColor: theme.palette.grey[200],
         height: "100%",
+        minHeight: "100vh",
       }}
     >
       <TopNavbar />
       <Container maxWidth="md">
-        <Grid container>
+        <Grid sx={{ paddingTop: "48px" }} container>
+          <Typography variant="h3">Edit tour</Typography>
           {items.map((item, index) => (
             <Grid item xs={12} key={index}>
               <MediaCardWrapper
                 index={index}
-                id={item.id}
-                deleteItem={deleteItem}
-                updateItem={updateItem}
-                totalItems={items.length}
-                swapItems={swapItems}
                 title={item.title}
                 description={item.description}
                 imgUrl={item.imgUrl}
+                deleteItem={deleteItem}
+                // // updateItem={updateItem}
+                totalItems={items.length}
+                // swapItems={swapItems}
+                moveItemUp={moveItemUp}
+                moveItemDown={moveItemDown}
+                // addItemAfter={addItemAfter}
+                // updateItemDescription={updateItemDescription}
+                // updateItemTitle={updateItemTitle}
+                updateItem={updateItem}
               />
             </Grid>
           ))}
         </Grid>
-        <Box sx={{ padding: "32px 0px 32px 0px" }}>
+        <Box sx={{ padding: "32px 0px 84px 0px" }}>
           <Button
             startIcon={<AddIcon />}
             fullWidth

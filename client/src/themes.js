@@ -13,6 +13,9 @@ export const lightTheme = createTheme({
       fontWeight: 600,
       textTransform: "none",
     },
+    h3: {
+      fontWeight: 500,
+    },
   },
 });
 

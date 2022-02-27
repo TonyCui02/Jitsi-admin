@@ -19,7 +19,7 @@ const Overlay = styled("div")(({ theme }) => ({
   overflowX: "hidden",
 }));
 
-const ImagePreview = ({ imageUrl, setPreviewVisible }) => {
+const ImagePreview = ({ imgUrl, setPreviewVisible }) => {
   return (
     <ThemeProvider theme={darkTheme}>
       <Overlay>
@@ -36,7 +36,7 @@ const ImagePreview = ({ imageUrl, setPreviewVisible }) => {
             width="100%"
             height="800px"
             maxHfov="120"
-            image={imageUrl}
+            image={imgUrl}
             autoLoad
             author=""
             title=""
