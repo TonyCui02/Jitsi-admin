@@ -10,7 +10,13 @@ import TopNavbar from "../components/TopNavbar";
 const HomePageLayout = () => {
   const theme = useTheme();
   const [items, setItems] = useState([
-    { imgUrl: "", title: "", description: "", mediaType: "image" },
+    {
+      imgUrl: "",
+      title: "",
+      description: "",
+      mediaType: "image",
+      isVisible: true,
+    },
   ]);
 
   const addItem = () => {
@@ -21,6 +27,7 @@ const HomePageLayout = () => {
         title: "",
         description: "",
         mediaType: "image",
+        isVisible: true,
       },
     ]);
   };
@@ -63,7 +70,16 @@ const HomePageLayout = () => {
         title: "",
         description: "",
         mediaType: "image",
+        isVisible: true,
       },
+      ...prevItems.slice(index + 1),
+    ]);
+  }, []); // No dependencies
+
+  const copyItem = useCallback((index) => {
+    setItems((prevItems) => [
+      ...prevItems.slice(0, index + 1),
+      prevItems[index],
       ...prevItems.slice(index + 1),
     ]);
   }, []); // No dependencies
@@ -92,6 +108,7 @@ const HomePageLayout = () => {
                 description={item.description}
                 imgUrl={item.imgUrl}
                 mediaType={item.mediaType}
+                isVisible={item.isVisible}
                 deleteItem={deleteItem}
                 // // updateItem={updateItem}
                 totalItems={items.length}
@@ -102,6 +119,7 @@ const HomePageLayout = () => {
                 // updateItemDescription={updateItemDescription}
                 // updateItemTitle={updateItemTitle}
                 updateItem={updateItem}
+                copyItem={copyItem}
               />
             </Grid>
           ))}

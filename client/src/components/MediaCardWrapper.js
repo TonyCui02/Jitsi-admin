@@ -8,15 +8,18 @@ import {
   CardContent,
   IconButton,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import { memo, useEffect } from "react";
 import UploaderBox from "./UploaderBox";
+import CopyAllIcon from "@mui/icons-material/CopyAll";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const CardHelpers = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
+  gap: "2px",
   padding: "6px 0px 6px 0px",
 }));
 
@@ -26,6 +29,7 @@ const MediaCardWrapper = memo(
     description,
     imgUrl,
     mediaType,
+    isVisible,
     index,
     deleteItem,
     updateItem,
@@ -33,14 +37,15 @@ const MediaCardWrapper = memo(
     moveItemUp,
     moveItemDown,
     addItemAfter,
+    copyItem,
   }) => {
-    
     const updateItemTitle = (index, title) => {
       const newItem = {
         title: title,
         description,
         imgUrl,
-        mediaType
+        mediaType,
+        isVisible,
       };
       updateItem(index, newItem);
     };
@@ -50,7 +55,8 @@ const MediaCardWrapper = memo(
         title,
         description: description,
         imgUrl,
-        mediaType
+        mediaType,
+        isVisible,
       };
       updateItem(index, newItem);
     };
@@ -60,7 +66,19 @@ const MediaCardWrapper = memo(
         title,
         description,
         imgUrl: imgUrl,
-        mediaType: mediaType
+        mediaType: mediaType,
+        isVisible,
+      };
+      updateItem(index, newItem);
+    };
+
+    const updateItemVisibility = (index, isVisible) => {
+      const newItem = {
+        title,
+        description,
+        imgUrl,
+        mediaType,
+        isVisible: isVisible,
       };
       updateItem(index, newItem);
     };
@@ -73,8 +91,8 @@ const MediaCardWrapper = memo(
       <Box sx={{ paddingTop: "26px", display: "block" }}>
         <CardHelpers>
           <Typography>Item {index}</Typography>
-          <IconButton>
-            <VisibilityOutlinedIcon />
+          <IconButton onClick={() => updateItemVisibility(index, !isVisible)}>
+            {isVisible ? <VisibilityOutlinedIcon /> : <VisibilityOffIcon />}
           </IconButton>
           <Box sx={{ flex: "1" }} />
           {totalItems > 1 && (
@@ -99,9 +117,9 @@ const MediaCardWrapper = memo(
               </IconButton>
             </>
           )}
-          {/* <IconButton aria-label="copy">
-            <ContentCopyIcon />
-          </IconButton> */}
+          <IconButton aria-label="copy" onClick={() => copyItem(index)}>
+            <CopyAllIcon />
+          </IconButton>
           {totalItems > 1 && (
             <IconButton aria-label="delete" onClick={() => deleteItem(index)}>
               <DeleteOutlineIcon />
@@ -116,10 +134,13 @@ const MediaCardWrapper = memo(
             <AddBoxOutlinedIcon />
           </IconButton>
         </CardHelpers>
+
         <Card
           sx={{
             display: "flex",
             padding: 8,
+            opacity: isVisible ? "100%" : "60%",
+            backgroundColor: isVisible ? "white" : "grey"
           }}
         >
           <UploaderBox
