@@ -54,18 +54,17 @@ const HomePageLayout = () => {
     ]);
   }, []); // No dependencies
 
-  const addItemAfter = (index) => {
-    setItems([
-      ...items.slice(0, index + 1),
+  const addItemAfter = useCallback((index) => {
+    setItems((prevItems) => [
+      ...prevItems.slice(0, index + 1),
       {
-        id: crypto.randomUUID(),
-        imgUrl: null,
+        imgUrl: "",
         title: "",
         description: "",
       },
-      ...items.slice(index + 1),
+      ...prevItems.slice(index + 1),
     ]);
-  };
+  }, []); // No dependencies
 
   useEffect(() => {
     console.log(items);
@@ -96,7 +95,7 @@ const HomePageLayout = () => {
                 // swapItems={swapItems}
                 moveItemUp={moveItemUp}
                 moveItemDown={moveItemDown}
-                // addItemAfter={addItemAfter}
+                addItemAfter={addItemAfter}
                 // updateItemDescription={updateItemDescription}
                 // updateItemTitle={updateItemTitle}
                 updateItem={updateItem}

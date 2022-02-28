@@ -1,7 +1,7 @@
 import { useTheme } from "@emotion/react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CardActionArea, Typography } from "@mui/material";
+import { CardActionArea, Chip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
@@ -31,6 +31,18 @@ const PreviewImage = styled("img")(() => ({
   cursor: "pointer",
 }));
 
+const PreviewVideo = styled("video")(() => ({
+  display: "block",
+  width: "100%",
+  borderRadius: "10px",
+  transition: "opacity 0.3s",
+  opacity: "1",
+  ":hover": {
+    opacity: "0.9",
+  },
+  cursor: "pointer",
+}));
+
 const CustomIconButton = styled("button")(({ theme }) => ({
   backgroundColor: "white",
   position: "absolute",
@@ -48,10 +60,18 @@ const CustomIconButton = styled("button")(({ theme }) => ({
   },
 }));
 
+const MediaTypeChip = styled(Chip)(({ theme }) => ({
+  position: "absolute",
+  bottom: "-45px",
+  left: "0px",
+  // bottom: "0px",
+}));
+
 const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
   const theme = useTheme();
   const [files, setFiles] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [isImage, setIsImage] = useState(true);
 
   const handleImageDelete = () => {
     setFiles([]);
@@ -73,14 +93,18 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
           })
         )
       );
+      if (acceptedFiles[0].type.match("video.*")) {
+        setIsImage(false);
+      }
       updateItemImage(index, acceptedFiles[0].preview);
+      // console.log(isImage);
     },
     [index, updateItemImage]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: "image/*",
+    accept: "image/*,video/*",
     multiple: false,
   });
 
@@ -88,14 +112,23 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
     <>
       {imgUrl !== "" ? (
         <ImageContainer>
+          {/* <MediaTypeChip label="Chip Filled" /> */}
           <CustomIconButton onClick={() => handleImageDelete()}>
             <DeleteIcon />
           </CustomIconButton>
-          <PreviewImage
-            src={imgUrl}
-            alt="test"
-            onClick={() => handleImagePreview()}
-          />
+          {isImage ? (
+            <PreviewImage
+              src={imgUrl}
+              alt="test"
+              onClick={() => handleImagePreview()}
+            />
+          ) : (
+            <PreviewVideo
+              src={imgUrl}
+              alt="test"
+              onClick={() => handleImagePreview()}
+            />
+          )}
         </ImageContainer>
       ) : (
         <CardActionArea
@@ -154,7 +187,11 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
         </CardActionArea>
       )}
       {previewVisible === true && (
-        <ImagePreview setPreviewVisible={setPreviewVisible} imgUrl={imgUrl} />
+        <ImagePreview
+          setPreviewVisible={setPreviewVisible}
+          imgUrl={imgUrl}
+          isImage={isImage}
+        />
       )}
     </>
   );

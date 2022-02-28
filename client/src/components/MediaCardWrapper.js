@@ -1,5 +1,4 @@
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -9,10 +8,10 @@ import {
   CardContent,
   IconButton,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import { Box, styled } from "@mui/system";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect } from "react";
 import UploaderBox from "./UploaderBox";
 
 const CardHelpers = styled(Box)(() => ({
@@ -33,8 +32,6 @@ const MediaCardWrapper = memo(
     moveItemUp,
     moveItemDown,
     addItemAfter,
-    // updateItemTitle,
-    // swapItems,
   }) => {
     
     const updateItemTitle = (index, title) => {
@@ -98,9 +95,9 @@ const MediaCardWrapper = memo(
               </IconButton>
             </>
           )}
-          <IconButton aria-label="copy">
+          {/* <IconButton aria-label="copy">
             <ContentCopyIcon />
-          </IconButton>
+          </IconButton> */}
           {totalItems > 1 && (
             <IconButton aria-label="delete" onClick={() => deleteItem(index)}>
               <DeleteOutlineIcon />

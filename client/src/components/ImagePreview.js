@@ -3,7 +3,7 @@ import { Container } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { ThemeProvider } from "@mui/material/styles";
 import { styled } from "@mui/system";
-import { Pannellum } from "pannellum-react";
+import { Pannellum, PannellumVideo } from "pannellum-react";
 import { darkTheme } from "../themes";
 
 const Overlay = styled("div")(({ theme }) => ({
@@ -19,7 +19,7 @@ const Overlay = styled("div")(({ theme }) => ({
   overflowX: "hidden",
 }));
 
-const ImagePreview = ({ imgUrl, setPreviewVisible }) => {
+const ImagePreview = ({ imgUrl, setPreviewVisible, isImage }) => {
   return (
     <ThemeProvider theme={darkTheme}>
       <Overlay>
@@ -32,64 +32,71 @@ const ImagePreview = ({ imgUrl, setPreviewVisible }) => {
           <CloseIcon fontSize="large" />
         </IconButton>
         <Container>
-          <Pannellum
-            width="100%"
-            height="800px"
-            maxHfov="120"
-            image={imgUrl}
-            autoLoad
-            author=""
-            title=""
-            orientationOnByDefault={false}
-            draggable
-            keyboardZoom
-            mouseZoom
-            preview=""
-            previewAuthor=""
-            previewTitle=""
-            showControls
-            showFullscreenCtrl
-            showZoomCtrl
-            onLoad={() => {
-              console.log("panorama loaded");
-            }}
-            onScenechange={(id) => {
-              console.log("Scene has change on " + id);
-            }}
-            onScenechangefadedone={() => {
-              console.log("panorama loaded");
-            }}
-            onError={(err) => {
-              console.log("Error", err);
-            }}
-            onErrorcleared={() => {
-              console.log("Error Cleared");
-            }}
-            onMousedown={(evt) => {
-              console.log("Mouse Down", evt);
-            }}
-            onMouseup={(evt) => {
-              console.log("Mouse Up", evt);
-            }}
-            onTouchstart={(evt) => {
-              console.log("Touch Start", evt);
-            }}
-            onTouchend={(evt) => {
-              console.log("Touch End", evt);
-            }}
-            hotspotDebug={false}
-          >
-            <Pannellum.Hotspot
-              type="info"
-              text="Info Hotspot Text 3"
-              URL="https://github.com/farminf"
-            />
-            <Pannellum.Hotspot
-              type="custom"
-              handleClick={(evt, args) => this.hanldeClickImage(evt, args)}
-              handleClickArg={{ name: "test" }}
-            />
-          </Pannellum>
+          {isImage ? (
+            <Pannellum
+              width="100%"
+              height="800px"
+              maxHfov="120"
+              image={imgUrl}
+              autoLoad
+              author=""
+              title=""
+              orientationOnByDefault={false}
+              draggable
+              keyboardZoom
+              mouseZoom
+              preview=""
+              previewAuthor=""
+              previewTitle=""
+              showControls
+              showFullscreenCtrl
+              showZoomCtrl
+              hotspotDebug={false}
+            >
+              <Pannellum.Hotspot
+                type="info"
+                text="Info Hotspot Text 3"
+                URL="https://github.com/farminf"
+              />
+              <Pannellum.Hotspot
+                type="custom"
+                handleClick={(evt, args) => this.hanldeClickImage(evt, args)}
+                handleClickArg={{ name: "test" }}
+              />
+            </Pannellum>
+          ) : (
+            <PannellumVideo
+              video={imgUrl}
+              loop
+              autoplay
+              controls
+              width="100%"
+              height="600px"
+              pitch={10}
+              yaw={180}
+              hfov={120}
+              minHfov={50}
+              maxHfov={150}
+              hotSpotDebug
+              mouseZoom={false}
+            >
+              <Pannellum.Hotspot
+                type="custom"
+                pitch={31}
+                yaw={150}
+                handleClick={(evt, args) => this.hanldeClick(args.name)}
+                handleClickArg={{ name: "video2" }}
+              />
+
+              <Pannellum.Hotspot
+                type="info"
+                pitch={31}
+                yaw={-57}
+                text="Info dfsdfs"
+                URL="https://github.com/farminf"
+              />
+            </PannellumVideo>
+          )}
         </Container>
       </Overlay>
     </ThemeProvider>
