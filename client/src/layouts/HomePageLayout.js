@@ -10,7 +10,7 @@ import TopNavbar from "../components/TopNavbar";
 const HomePageLayout = () => {
   const theme = useTheme();
   const [items, setItems] = useState([
-    { imgUrl: "", title: "", description: "" },
+    { imgUrl: "", title: "", description: "", mediaType: "image" },
   ]);
 
   const addItem = () => {
@@ -20,6 +20,7 @@ const HomePageLayout = () => {
         imgUrl: "",
         title: "",
         description: "",
+        mediaType: "image",
       },
     ]);
   };
@@ -61,6 +62,7 @@ const HomePageLayout = () => {
         imgUrl: "",
         title: "",
         description: "",
+        mediaType: "image",
       },
       ...prevItems.slice(index + 1),
     ]);
@@ -89,6 +91,7 @@ const HomePageLayout = () => {
                 title={item.title}
                 description={item.description}
                 imgUrl={item.imgUrl}
+                mediaType={item.mediaType}
                 deleteItem={deleteItem}
                 // // updateItem={updateItem}
                 totalItems={items.length}

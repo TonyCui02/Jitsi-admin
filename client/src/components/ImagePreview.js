@@ -19,7 +19,7 @@ const Overlay = styled("div")(({ theme }) => ({
   overflowX: "hidden",
 }));
 
-const ImagePreview = ({ imgUrl, setPreviewVisible, isImage }) => {
+const ImagePreview = ({ imgUrl, setPreviewVisible, mediaType }) => {
   return (
     <ThemeProvider theme={darkTheme}>
       <Overlay>
@@ -32,7 +32,7 @@ const ImagePreview = ({ imgUrl, setPreviewVisible, isImage }) => {
           <CloseIcon fontSize="large" />
         </IconButton>
         <Container>
-          {isImage ? (
+          {mediaType === "image" ? (
             <Pannellum
               width="100%"
               height="800px"

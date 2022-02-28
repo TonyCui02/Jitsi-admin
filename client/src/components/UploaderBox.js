@@ -11,6 +11,7 @@ import ImagePreview from "./ImagePreview";
 
 const UploaderContainer = styled("div")(() => ({
   display: "flex",
+  height: "100%",
   flexDirection: "column",
   flex: "1",
 }));
@@ -70,7 +71,7 @@ const MediaTypeChip = styled(Chip)(({ theme }) => ({
   width: "auto",
 }));
 
-const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
+const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
   const theme = useTheme();
   const [files, setFiles] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -78,7 +79,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
 
   const handleImageDelete = () => {
     setFiles([]);
-    updateItemImage(index, "");
+    updateItemImage(index, "", "image");
   };
 
   const handleImagePreview = () => {
@@ -97,9 +98,10 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
         )
       );
       if (acceptedFiles[0].type.match("video.*")) {
-        setIsImage(false);
+        updateItemImage(index, acceptedFiles[0].preview, "video");
+      } else {
+        updateItemImage(index, acceptedFiles[0].preview, "image");
       }
-      updateItemImage(index, acceptedFiles[0].preview);
       // console.log(isImage);
     },
     [index, updateItemImage]
@@ -120,7 +122,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
             <CustomIconButton onClick={() => handleImageDelete()}>
               <DeleteIcon />
             </CustomIconButton>
-            {isImage ? (
+            {mediaType === "image" ? (
               <PreviewImage
                 src={imgUrl}
                 alt="test"
@@ -135,7 +137,11 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
             )}
           </ImageContainer>
           <Box py="6px">
-            <MediaTypeChip label={isImage ? "Image" : "Video"} color="primary" variant="outlined" />
+            <MediaTypeChip
+              label={isImage ? "Image" : "Video"}
+              color="primary"
+              variant="outlined"
+            />
           </Box>
         </UploaderContainer>
       ) : (
@@ -198,7 +204,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
         <ImagePreview
           setPreviewVisible={setPreviewVisible}
           imgUrl={imgUrl}
-          isImage={isImage}
+          mediaType={mediaType}
         />
       )}
     </>

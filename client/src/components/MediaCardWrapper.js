@@ -25,6 +25,7 @@ const MediaCardWrapper = memo(
     title,
     description,
     imgUrl,
+    mediaType,
     index,
     deleteItem,
     updateItem,
@@ -39,6 +40,7 @@ const MediaCardWrapper = memo(
         title: title,
         description,
         imgUrl,
+        mediaType
       };
       updateItem(index, newItem);
     };
@@ -48,15 +50,17 @@ const MediaCardWrapper = memo(
         title,
         description: description,
         imgUrl,
+        mediaType
       };
       updateItem(index, newItem);
     };
 
-    const updateItemImage = (index, imgUrl) => {
+    const updateItemImage = (index, imgUrl, mediaType) => {
       const newItem = {
         title,
         description,
         imgUrl: imgUrl,
+        mediaType: mediaType
       };
       updateItem(index, newItem);
     };
@@ -122,6 +126,7 @@ const MediaCardWrapper = memo(
             index={index}
             updateItemImage={updateItemImage}
             imgUrl={imgUrl}
+            mediaType={mediaType}
           />
           <Box sx={{ display: "flex", flexDirection: "column", flex: "1" }}>
             <CardContent sx={{ display: "flex", flexDirection: "column" }}>
