@@ -75,7 +75,6 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
   const theme = useTheme();
   const [files, setFiles] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [isImage, setIsImage] = useState(true);
 
   const handleImageDelete = () => {
     setFiles([]);
@@ -102,7 +101,6 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
       } else {
         updateItemImage(index, acceptedFiles[0].preview, "image");
       }
-      // console.log(isImage);
     },
     [index, updateItemImage]
   );
@@ -138,7 +136,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
           </ImageContainer>
           <Box py="6px">
             <MediaTypeChip
-              label={isImage ? "Image" : "Video"}
+              label={mediaType === "image" ? "Image" : "Video"}
               color="primary"
               variant="outlined"
             />
