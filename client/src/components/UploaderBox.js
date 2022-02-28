@@ -9,6 +9,12 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import ImagePreview from "./ImagePreview";
 
+const UploaderContainer = styled("div")(() => ({
+  display: "flex",
+  flexDirection: "column",
+  flex: "1",
+}));
+
 const ImageContainer = styled("span")(() => ({
   display: "inline-block",
   height: "100%",
@@ -61,10 +67,7 @@ const CustomIconButton = styled("button")(({ theme }) => ({
 }));
 
 const MediaTypeChip = styled(Chip)(({ theme }) => ({
-  position: "absolute",
-  bottom: "-45px",
-  left: "0px",
-  // bottom: "0px",
+  width: "auto",
 }));
 
 const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
@@ -111,25 +114,30 @@ const UploaderBox = ({ index, updateItemImage, imgUrl }) => {
   return (
     <>
       {imgUrl !== "" ? (
-        <ImageContainer>
-          {/* <MediaTypeChip label="Chip Filled" /> */}
-          <CustomIconButton onClick={() => handleImageDelete()}>
-            <DeleteIcon />
-          </CustomIconButton>
-          {isImage ? (
-            <PreviewImage
-              src={imgUrl}
-              alt="test"
-              onClick={() => handleImagePreview()}
-            />
-          ) : (
-            <PreviewVideo
-              src={imgUrl}
-              alt="test"
-              onClick={() => handleImagePreview()}
-            />
-          )}
-        </ImageContainer>
+        <UploaderContainer>
+          <ImageContainer>
+            {/* <MediaTypeChip label="Chip Filled" /> */}
+            <CustomIconButton onClick={() => handleImageDelete()}>
+              <DeleteIcon />
+            </CustomIconButton>
+            {isImage ? (
+              <PreviewImage
+                src={imgUrl}
+                alt="test"
+                onClick={() => handleImagePreview()}
+              />
+            ) : (
+              <PreviewVideo
+                src={imgUrl}
+                alt="test"
+                onClick={() => handleImagePreview()}
+              />
+            )}
+          </ImageContainer>
+          <Box py="6px">
+            <MediaTypeChip label={isImage ? "Image" : "Video"} color="primary" variant="outlined" />
+          </Box>
+        </UploaderContainer>
       ) : (
         <CardActionArea
           sx={{
