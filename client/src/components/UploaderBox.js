@@ -1,12 +1,18 @@
 import { useTheme } from "@emotion/react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CardActionArea, Chip, Typography } from "@mui/material";
+import {
+  CardActionArea,
+  Chip,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { getPresignedUrl, pushFileToS3, upload } from "../api/api";
 import ImagePreview from "./ImagePreview";
 
 const UploaderContainer = styled("div")(() => ({
@@ -75,8 +81,11 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
   const theme = useTheme();
   const [files, setFiles] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [imageUploaded, setImageUploaded] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const handleImageDelete = () => {
+    setImageUploaded(false);
     setFiles([]);
     updateItemImage(index, "", "image");
   };
@@ -86,7 +95,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
   };
 
   const onDrop = useCallback(
-    (acceptedFiles) => {
+    async (acceptedFiles) => {
       // Do something with the files
       // console.log(acceptedFiles);
       setFiles(
@@ -96,10 +105,21 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
           })
         )
       );
+
+      const presignedUrl = await getPresignedUrl(acceptedFiles[0]);
+      // console.log(presignedUrl);
+      const response = await pushFileToS3(presignedUrl, acceptedFiles[0]);
+      // console.log(response);
+      const url = response.config.url;
+      const imgUrl = url.split("?", 1)[0];
+      // console.log(imgUrl);
+
+      setImageUploaded(true);
+
       if (acceptedFiles[0].type.match("video.*")) {
-        updateItemImage(index, acceptedFiles[0].preview, "video");
+        updateItemImage(index, imgUrl, "video");
       } else {
-        updateItemImage(index, acceptedFiles[0].preview, "image");
+        updateItemImage(index, imgUrl, "image");
       }
     },
     [index, updateItemImage]
@@ -115,25 +135,32 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
     <>
       {imgUrl !== "" ? (
         <UploaderContainer>
-          <ImageContainer>
-            {/* <MediaTypeChip label="Chip Filled" /> */}
-            <CustomIconButton onClick={() => handleImageDelete()}>
-              <DeleteIcon />
-            </CustomIconButton>
-            {mediaType === "image" ? (
-              <PreviewImage
-                src={imgUrl}
-                alt="test"
-                onClick={() => handleImagePreview()}
-              />
-            ) : (
-              <PreviewVideo
-                src={imgUrl}
-                alt="test"
-                onClick={() => handleImagePreview()}
-              />
-            )}
-          </ImageContainer>
+          {imageUploaded ? (
+            <ImageContainer>
+              {/* <MediaTypeChip label="Chip Filled" /> */}
+              <CustomIconButton onClick={() => handleImageDelete()}>
+                <DeleteIcon />
+              </CustomIconButton>
+              {mediaType === "image" ? (
+                <PreviewImage
+                  src={imgUrl}
+                  alt="test"
+                  onClick={() => handleImagePreview()}
+                />
+              ) : (
+                <PreviewVideo
+                  src={imgUrl}
+                  alt="test"
+                  onClick={() => handleImagePreview()}
+                />
+              )}
+            </ImageContainer>
+          ) : (
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress />
+            </Box>
+          )}
+
           <Box py="6px">
             <MediaTypeChip
               label={mediaType === "image" ? "Image" : "Video"}
