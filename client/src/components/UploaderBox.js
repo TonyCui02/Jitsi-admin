@@ -135,32 +135,25 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
     <>
       {imgUrl !== "" ? (
         <UploaderContainer>
-          {imageUploaded ? (
-            <ImageContainer>
-              {/* <MediaTypeChip label="Chip Filled" /> */}
-              <CustomIconButton onClick={() => handleImageDelete()}>
-                <DeleteIcon />
-              </CustomIconButton>
-              {mediaType === "image" ? (
-                <PreviewImage
-                  src={imgUrl}
-                  alt="test"
-                  onClick={() => handleImagePreview()}
-                />
-              ) : (
-                <PreviewVideo
-                  src={imgUrl}
-                  alt="test"
-                  onClick={() => handleImagePreview()}
-                />
-              )}
-            </ImageContainer>
-          ) : (
-            <Box sx={{ display: "flex" }}>
-              <CircularProgress />
-            </Box>
-          )}
-
+          <ImageContainer>
+            {/* <MediaTypeChip label="Chip Filled" /> */}
+            <CustomIconButton onClick={() => handleImageDelete()}>
+              <DeleteIcon />
+            </CustomIconButton>
+            {mediaType === "image" ? (
+              <PreviewImage
+                src={imgUrl}
+                alt="test"
+                onClick={() => handleImagePreview()}
+              />
+            ) : (
+              <PreviewVideo
+                src={imgUrl}
+                alt="test"
+                onClick={() => handleImagePreview()}
+              />
+            )}
+          </ImageContainer>
           <Box py="6px">
             <MediaTypeChip
               label={mediaType === "image" ? "Image" : "Video"}

@@ -36,7 +36,7 @@ const ImagePreview = ({ imgUrl, setPreviewVisible, mediaType }) => {
             <Pannellum
               width="100%"
               height="800px"
-              maxHfov="120"
+              maxHfov={150}
               image={imgUrl}
               autoLoad
               author=""

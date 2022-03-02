@@ -85,6 +85,17 @@ const HomePageLayout = () => {
   }, []); // No dependencies
 
   useEffect(() => {
+    console.log("mount");
+    if (localStorage.getItem("itemsData")) {
+      console.log("user already has saved data");
+      const savedItemsData = JSON.parse(localStorage.getItem("itemsData"));
+      console.log("saved data: " + JSON.stringify(savedItemsData));
+      setItems(savedItemsData);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("itemsData", JSON.stringify(items));
     console.log(items);
   }, [items]);
 
