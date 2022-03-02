@@ -106,20 +106,20 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
         )
       );
 
-      const presignedUrl = await getPresignedUrl(acceptedFiles[0]);
+      // const presignedUrl = await getPresignedUrl(acceptedFiles[0]);
       // console.log(presignedUrl);
-      const response = await pushFileToS3(presignedUrl, acceptedFiles[0]);
+      // const response = await pushFileToS3(presignedUrl, acceptedFiles[0]);
       // console.log(response);
-      const url = response.config.url;
-      const imgUrl = url.split("?", 1)[0];
+      // const url = response.config.url;
+      // const imgUrl = url.split("?", 1)[0];
       // console.log(imgUrl);
 
       setImageUploaded(true);
 
       if (acceptedFiles[0].type.match("video.*")) {
-        updateItemImage(index, imgUrl, "video");
+        updateItemImage(index, acceptedFiles[0].preview, "video");
       } else {
-        updateItemImage(index, imgUrl, "image");
+        updateItemImage(index, acceptedFiles[0].preview, "image");
       }
     },
     [index, updateItemImage]
