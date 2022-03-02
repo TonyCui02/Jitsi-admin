@@ -3,10 +3,10 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node ./src/server.js",
-    "server": "nodemon server.js",
+    "start": "node ./src/index.js",
+    "server": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
