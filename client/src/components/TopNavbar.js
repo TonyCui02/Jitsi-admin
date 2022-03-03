@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 
-export default function SearchAppBar() {
+export default function SearchAppBar({ setPresentMode }) {
   const theme = useTheme();
 
   return (
@@ -32,10 +32,14 @@ export default function SearchAppBar() {
               hiddenLabel
               size="small"
               label="Tour name"
-              id="outlined-size-normal" 
+              id="outlined-size-normal"
             />
             <Box sx={{ width: 5 }} />
-            <Button sx={{ height: 40 }} variant="outlined">
+            <Button
+              sx={{ height: 40 }}
+              variant="outlined"
+              onClick={() => setPresentMode(true)}
+            >
               Present
             </Button>
             <Button sx={{ height: 40 }} variant="contained">

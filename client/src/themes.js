@@ -7,6 +7,9 @@ export const lightTheme = createTheme({
     primary: {
       main: "#0157FF",
     },
+    darkGrey: {
+      main: "#18191b",
+    },
   },
   typography: {
     button: {
