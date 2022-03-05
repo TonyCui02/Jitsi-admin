@@ -1,9 +1,11 @@
 import { useTheme } from "@emotion/react";
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import MediaCardWrapper from "../components/MediaCardWrapper";
 import HomePageLayout from "../layouts/HomePageLayout";
+import TopNavbar from "../components/TopNavbar";
+import PresentView from "./PresentView";
 
 const HomePage = () => {
   const theme = useTheme();
@@ -99,42 +101,57 @@ const HomePage = () => {
   }, [items]);
   return (
     <HomePageLayout>
-      <Grid sx={{ paddingTop: "48px" }} container>
-        <Typography variant="h3">Edit tour</Typography>
-        {items.map((item, index) => (
-          <Grid item xs={12} key={index}>
-            <MediaCardWrapper
-              index={index}
-              title={item.title}
-              description={item.description}
-              imgUrl={item.imgUrl}
-              mediaType={item.mediaType}
-              isVisible={item.isVisible}
-              deleteItem={deleteItem}
-              // // updateItem={updateItem}
-              totalItems={items.length}
-              // swapItems={swapItems}
-              moveItemUp={moveItemUp}
-              moveItemDown={moveItemDown}
-              addItemAfter={addItemAfter}
-              // updateItemDescription={updateItemDescription}
-              // updateItemTitle={updateItemTitle}
-              updateItem={updateItem}
-              copyItem={copyItem}
-            />
-          </Grid>
-        ))}
-      </Grid>
-      <Box sx={{ padding: "32px 0px 84px 0px" }}>
-        <Button
-          startIcon={<AddIcon />}
-          fullWidth
-          variant="contained"
-          onClick={() => addItem()}
+      {presentMode ? (
+        <PresentView setPresentMode={setPresentMode} items={items} />
+      ) : (
+        <Box
+          sx={{
+            backgroundColor: theme.palette.grey[200],
+            height: "100%",
+            minHeight: "100vh",
+          }}
         >
-          Add Item
-        </Button>
-      </Box>
+          <TopNavbar setPresentMode={setPresentMode} />
+          <Container maxWidth="md">
+            <Grid sx={{ paddingTop: "48px" }} container>
+              <Typography variant="h3">Edit tour</Typography>
+              {items.map((item, index) => (
+                <Grid item xs={12} key={index}>
+                  <MediaCardWrapper
+                    index={index}
+                    title={item.title}
+                    description={item.description}
+                    imgUrl={item.imgUrl}
+                    mediaType={item.mediaType}
+                    isVisible={item.isVisible}
+                    deleteItem={deleteItem}
+                    // // updateItem={updateItem}
+                    totalItems={items.length}
+                    // swapItems={swapItems}
+                    moveItemUp={moveItemUp}
+                    moveItemDown={moveItemDown}
+                    addItemAfter={addItemAfter}
+                    // updateItemDescription={updateItemDescription}
+                    // updateItemTitle={updateItemTitle}
+                    updateItem={updateItem}
+                    copyItem={copyItem}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            <Box sx={{ padding: "32px 0px 84px 0px" }}>
+              <Button
+                startIcon={<AddIcon />}
+                fullWidth
+                variant="contained"
+                onClick={() => addItem()}
+              >
+                Add Item
+              </Button>
+            </Box>
+          </Container>
+        </Box>
+      )}
     </HomePageLayout>
   );
 };

@@ -72,13 +72,8 @@ const ImagePreview = ({ imgUrl, setPreviewVisible, mediaType }) => {
               controls
               width="100%"
               height="600px"
-              pitch={10}
-              yaw={180}
               hfov={120}
-              minHfov={50}
-              maxHfov={150}
-              hotSpotDebug
-              mouseZoom={false}
+              maxHfov={120}
             >
               <Pannellum.Hotspot
                 type="custom"

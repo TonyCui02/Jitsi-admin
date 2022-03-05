@@ -16,7 +16,7 @@ import { useTheme } from "@emotion/react";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
 
 export const defaultDrawerWidth = 360;
-const minDrawerWidth = 50;
+const minDrawerWidth = 260;
 const maxDrawerWidth = 1000;
 
 const Dragger = styled("div")(({ theme }) => ({
@@ -32,9 +32,8 @@ const Dragger = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.grey[700],
 }));
 
-const PresentDrawer = () => {
+const PresentDrawer = ({ drawerWidth, setDrawerWidth }) => {
   const theme = useTheme();
-  const [drawerWidth, setDrawerWidth] = React.useState(defaultDrawerWidth);
 
   const handleMouseDown = (e) => {
     document.addEventListener("mouseup", handleMouseUp, true);
@@ -52,7 +51,6 @@ const PresentDrawer = () => {
     if (newWidth > minDrawerWidth && newWidth < maxDrawerWidth) {
       setDrawerWidth(newWidth);
     }
-    setDrawerWidth(newWidth);
   }, []);
 
   return (
@@ -60,6 +58,7 @@ const PresentDrawer = () => {
       sx={{
         flexShrink: 0,
         width: drawerWidth,
+        height: "100vh",
       }}
       variant="permanent"
       anchor="right"
@@ -68,17 +67,7 @@ const PresentDrawer = () => {
       }}
     >
       <Dragger onMouseDown={(e) => handleMouseDown(e)} />
-      <Container
-        sx={
-          {
-            // display: "flex",
-            // flexDirection: "column",
-            // alignItems: "center",
-            // width: "100%",
-            // height: "100%",
-          }
-        }
-      >
+      <Container>
         <Grid
           container
           alignItems="center"
@@ -105,7 +94,7 @@ const PresentDrawer = () => {
           // value={value}
           // onChange={handleChange}
           sx={{
-            my: 4
+            my: 4,
           }}
         />
       </Container>

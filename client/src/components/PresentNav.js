@@ -8,13 +8,16 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import CloseIcon from "@mui/icons-material/Close";
 
-export default function PresentNav({ setPresentMode }) {
+export default function PresentNav({ setPresentMode, drawerWidth }) {
   const theme = useTheme();
 
   return (
     <AppBar
       position="static"
-      sx={{ background: "transparent", boxShadow: "none" }}
+      sx={{
+        background: "transparent",
+        boxShadow: "none",
+      }}
     >
       <Toolbar sx={{ height: "64px" }}>
         <Button size="large" startIcon={<ArrowBackIosIcon />}>
