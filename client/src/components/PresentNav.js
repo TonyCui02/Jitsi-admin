@@ -1,15 +1,19 @@
 import { useTheme } from "@emotion/react";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Button, TextField } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
-import CloseIcon from "@mui/icons-material/Close";
+import { useEffect, useState } from "react";
 
 export default function PresentNav({ setPresentMode, drawerWidth }) {
   const theme = useTheme();
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    setInterval(() => setTime(new Date()), 30000);
+}, []);
 
   return (
     <AppBar
@@ -20,9 +24,16 @@ export default function PresentNav({ setPresentMode, drawerWidth }) {
       }}
     >
       <Toolbar sx={{ height: "64px" }}>
-        <Button size="large" startIcon={<ArrowBackIosIcon />}>
+        {/* <Button size="large" startIcon={<ArrowBackIosIcon />}>
           Home
-        </Button>
+        </Button> */}
+        <Typography variant="h4">
+          {time.toLocaleString("en-GB", {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          })}
+        </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <Box
           sx={{

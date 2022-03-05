@@ -3,8 +3,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import MediaCardWrapper from "../components/MediaCardWrapper";
-import HomePageLayout from "../layouts/HomePageLayout";
 import TopNavbar from "../components/TopNavbar";
+import HomePageLayout from "../layouts/HomePageLayout";
 import PresentView from "./PresentView";
 
 const HomePage = () => {
@@ -102,7 +102,11 @@ const HomePage = () => {
   return (
     <HomePageLayout>
       {presentMode ? (
-        <PresentView setPresentMode={setPresentMode} items={items} />
+        <PresentView
+          setPresentMode={setPresentMode}
+          items={items}
+          updateItem={updateItem}
+        />
       ) : (
         <Box
           sx={{

@@ -1,19 +1,12 @@
-import {
-  Container,
-  Divider,
-  Drawer,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  makeStyles,
-  TextField,
-  Typography,
-} from "@mui/material";
-import React, { useCallback, useState } from "react";
-import { Box, styled } from "@mui/system";
 import { useTheme } from "@emotion/react";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
+import {
+  Container, Drawer,
+  Grid, TextField,
+  Typography
+} from "@mui/material";
+import { styled } from "@mui/system";
+import { useCallback } from "react";
 
 export const defaultDrawerWidth = 360;
 const minDrawerWidth = 260;
@@ -32,10 +25,10 @@ const Dragger = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.grey[700],
 }));
 
-const PresentDrawer = ({ drawerWidth, setDrawerWidth }) => {
+const PresentDrawer = ({ drawerWidth, setDrawerWidth, updateItem, activeItem }) => {
   const theme = useTheme();
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = () => {
     document.addEventListener("mouseup", handleMouseUp, true);
     document.addEventListener("mousemove", handleMouseMove, true);
   };
@@ -91,8 +84,7 @@ const PresentDrawer = ({ drawerWidth, setDrawerWidth }) => {
           maxRows={20}
           color="secondary"
           fullWidth
-          // value={value}
-          // onChange={handleChange}
+          value={activeItem?.description || ""}
           sx={{
             my: 4,
           }}

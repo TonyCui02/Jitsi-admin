@@ -90,7 +90,7 @@ const MediaCardWrapper = memo(
     return (
       <Box sx={{ paddingTop: "26px", display: "block" }}>
         <CardHelpers>
-          <Typography>Item {index}</Typography>
+          <Typography>Item {index+1}</Typography>
           <IconButton onClick={() => updateItemVisibility(index, !isVisible)}>
             {isVisible ? <VisibilityOutlinedIcon /> : <VisibilityOffIcon />}
           </IconButton>
@@ -171,8 +171,8 @@ const MediaCardWrapper = memo(
                   value={description || ""}
                   onChange={(e) => updateItemDescription(index, e.target.value)}
                   id="standard-textarea"
-                  label="Description"
-                  placeholder="Description about your media..."
+                  label="Notes"
+                  placeholder="Add some notes about this media"
                   multiline
                   variant="standard"
                 />

@@ -19,6 +19,9 @@ export const lightTheme = createTheme({
     h3: {
       fontWeight: 500,
     },
+    h5: {
+      fontWeight: 500,
+    },
   },
 });
 
@@ -26,4 +29,9 @@ export const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
+  typography: {
+    h4: {
+      fontWeight: 500,
+    },
+  }
 });

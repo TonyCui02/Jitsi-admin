@@ -1,7 +1,7 @@
 import { ThemeProvider, useTheme } from "@emotion/react";
-import { CssBaseline, Drawer, Paper, Typography } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import { useState } from "react";
 import PresentDrawer from "../components/PresentDrawer";
 import PresentNav from "../components/PresentNav";
 import SlidesPreview from "../components/SlidesPreview";
@@ -11,10 +11,12 @@ export const defaultDrawerWidth = 360;
 const minDrawerWidth = 260;
 const maxDrawerWidth = 1000;
 
-const PresentView = ({ setPresentMode, items }) => {
+
+const PresentView = ({ setPresentMode, items, updateItem }) => {
   const theme = useTheme();
 
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -30,14 +32,18 @@ const PresentView = ({ setPresentMode, items }) => {
           sx={{
             flexGrow: 1,
             width: `calc(100% - ${drawerWidth}px)`,
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <PresentNav setPresentMode={setPresentMode} />
-          <SlidesPreview items={items} />
+          <SlidesPreview items={items} setActiveIndex={setActiveIndex} />
         </Box>
         <PresentDrawer
           drawerWidth={drawerWidth}
           setDrawerWidth={setDrawerWidth}
+          activeItem={items[activeIndex]}
+          updateItem={updateItem}
         />
       </Box>
     </ThemeProvider>

@@ -1,31 +1,57 @@
 // import Swiper core and required modules
-import { Navigation, Pagination, Scrollbar, A11y, Thumbs } from "swiper";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-
+import { Container } from "@mui/material";
+import { Box, styled } from "@mui/system";
+import { Pannellum, PannellumVideo } from "pannellum-react";
+import { useState } from "react";
+import {
+  FreeMode, Navigation,
+  Pagination, Thumbs
+} from "swiper";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { Pannellum, PannellumVideo } from "pannellum-react";
-import { Container } from "@mui/material";
-import { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "./styles.css";
 
-const SlidesPreview = ({ items }) => {
+
+
+
+const PreviewImage = styled("img")(() => ({
+  display: "block",
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  borderRadius: "12px",
+  cursor: "pointer",
+}));
+
+const PreviewVideo = styled("video")(() => ({
+  display: "block",
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  borderRadius: "12px",
+  cursor: "pointer",
+}));
+
+const SlidesPreview = ({ items, setActiveIndex }) => {
   console.log(items);
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [swiper, setSwiper] = useState(null);
 
   return (
-    <div>
+    <Box sx={{ px: 5, flex: 1 }}>
       <Swiper
-        modules={[Navigation, Pagination, Scrollbar, A11y]}
+        modules={[Navigation, Pagination, Thumbs]}
         spaceBetween={100}
         slidesPerView={1}
         navigation
         pagination={{ clickable: true, type: "fraction" }}
-        scrollbar={{ draggable: true }}
-        onSwiper={(swiper) => console.log(swiper)}
-        onSlideChange={() => console.log("slide change")}
+        thumbs={{ swiper: thumbsSwiper }}
+        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+        onSwiper={(swiper) => setActiveIndex(swiper.activeIndex)}
         allowTouchMove={false}
         style={{
           "--swiper-navigation-color": "#fff",
@@ -33,9 +59,23 @@ const SlidesPreview = ({ items }) => {
         }}
       >
         {items.map((item, index) => (
-          <SwiperSlide>
+          <SwiperSlide key={index}>
             <Container sx={{ my: "40px" }}>
-              {item.mediaType === "image" ? (
+              {item.mediaType === "video" && (
+                <PannellumVideo
+                  video={item.imgUrl}
+                  loop
+                  autoplay
+                  controls
+                  width="100%"
+                  height="600px"
+                  pitch={10}
+                  yaw={180}
+                  hfov={120}
+                  maxHfov={120}
+                ></PannellumVideo>
+              )}
+              {item.mediaType === "image" && (
                 <Pannellum
                   width="100%"
                   height="600px"
@@ -70,50 +110,30 @@ const SlidesPreview = ({ items }) => {
                     handleClickArg={{ name: "test" }}
                   />
                 </Pannellum>
-              ) : (
-                <PannellumVideo
-                  video={item.imgUrl}
-                  loop
-                  autoplay
-                  controls
-                  width="100%"
-                  height="600px"
-                  pitch={10}
-                  yaw={180}
-                  hfov={120}
-                  maxHfov={120}
-                  hotSpotDebug
-                  mouseZoom={true}
-                  showFullscreenCtrl
-                  showControls
-                  showZoomCtrl
-                >
-                  <Pannellum.Hotspot
-                    type="custom"
-                    pitch={31}
-                    yaw={150}
-                    handleClick={(evt, args) => this.hanldeClick(args.name)}
-                    handleClickArg={{ name: "video2" }}
-                  />
-                  <Pannellum.Hotspot
-                    type="info"
-                    pitch={31}
-                    yaw={-57}
-                    text="Info dfsdfs"
-                    URL="https://github.com/farminf"
-                  />
-                </PannellumVideo>
               )}
             </Container>
           </SwiperSlide>
         ))}
       </Swiper>
-      {/* <Swiper >
+      <Swiper
+        modules={[FreeMode, Navigation, Thumbs]}
+        spaceBetween={24}
+        slidesPerView={5}
+        freeMode={true}
+        watchSlidesProgress={true}
+        // onSwiper={(swiper) => console.log(swiper)}
+        onSwiper={setThumbsSwiper}
+        onSlideChange={() => console.log("slide change")}
+        className="mySwiper"
+      >
         {items.map((item, index) => (
-          <SwiperSlide>{item.imgUrl}</SwiperSlide>
+          <SwiperSlide key={index}>
+            {item.mediaType === "image" && <PreviewImage src={item.imgUrl} />}
+            {item.mediaType === "video" && <PreviewVideo src={item.imgUrl} />}
+          </SwiperSlide>
         ))}
-      </Swiper> */}
-    </div>
+      </Swiper>
+    </Box>
   );
 };
 

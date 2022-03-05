@@ -3,16 +3,14 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   CardActionArea,
-  Chip,
-  CircularProgress,
-  Typography,
+  Chip, Typography
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { getPresignedUrl, pushFileToS3, upload } from "../api/api";
+import { getPresignedUrl, pushFileToS3 } from "../api/api";
 import ImagePreview from "./ImagePreview";
 
 const UploaderContainer = styled("div")(() => ({
@@ -71,6 +69,7 @@ const CustomIconButton = styled("button")(({ theme }) => ({
   ":hover": {
     backgroundColor: theme.palette.grey[200],
   },
+  boxShadow: "4px 8px 19px -3px rgba(0,0,0,0.27)"
 }));
 
 const MediaTypeChip = styled(Chip)(({ theme }) => ({
