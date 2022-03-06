@@ -97,8 +97,9 @@ const HomePage = () => {
 
   useEffect(() => {
     localStorage.setItem("itemsData", JSON.stringify(items));
-    console.log(items);
+    // console.log(items);
   }, [items]);
+
   return (
     <HomePageLayout>
       {presentMode ? (

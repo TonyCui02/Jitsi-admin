@@ -68,28 +68,13 @@ const ImagePreview = ({ imgUrl, setPreviewVisible, mediaType }) => {
             <PannellumVideo
               video={imgUrl}
               loop
-              autoplay
+              autoplay={false}
               controls
               width="100%"
               height="600px"
               hfov={120}
               maxHfov={120}
             >
-              <Pannellum.Hotspot
-                type="custom"
-                pitch={31}
-                yaw={150}
-                handleClick={(evt, args) => this.hanldeClick(args.name)}
-                handleClickArg={{ name: "video2" }}
-              />
-
-              <Pannellum.Hotspot
-                type="info"
-                pitch={31}
-                yaw={-57}
-                text="Info dfsdfs"
-                URL="https://github.com/farminf"
-              />
             </PannellumVideo>
           )}
         </Container>

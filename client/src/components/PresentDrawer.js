@@ -1,10 +1,6 @@
 import { useTheme } from "@emotion/react";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
-import {
-  Container, Drawer,
-  Grid, TextField,
-  Typography
-} from "@mui/material";
+import { Container, Drawer, Grid, TextField, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useCallback } from "react";
 
@@ -25,7 +21,12 @@ const Dragger = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.grey[700],
 }));
 
-const PresentDrawer = ({ drawerWidth, setDrawerWidth, updateItem, activeItem }) => {
+const PresentDrawer = ({
+  drawerWidth,
+  setDrawerWidth,
+  updateItem,
+  activeItem,
+}) => {
   const theme = useTheme();
 
   const handleMouseDown = () => {
@@ -45,6 +46,14 @@ const PresentDrawer = ({ drawerWidth, setDrawerWidth, updateItem, activeItem }) 
       setDrawerWidth(newWidth);
     }
   }, []);
+
+  const updateItemDescription = (activeItem, description) => {
+    const newItem = activeItem;
+    newItem.description = description
+    updateItem(newItem.index, newItem);
+  };
+
+  // console.log("active item: " + JSON.stringify(activeItem))
 
   return (
     <Drawer
@@ -81,10 +90,11 @@ const PresentDrawer = ({ drawerWidth, setDrawerWidth, updateItem, activeItem }) 
           label="Multiline"
           multiline
           rows={20}
-          maxRows={20}
+          // maxRows={20}
           color="secondary"
           fullWidth
           value={activeItem?.description || ""}
+          onChange={(e) => updateItemDescription(activeItem, e.target.value)}
           sx={{
             my: 4,
           }}
