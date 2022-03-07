@@ -52,9 +52,11 @@ const SlidesPreview = memo(({ items, setActiveIndex }) => {
           "--swiper-pagination-color": "#fff",
         }}
       >
-        {items.map((item, index) => (
-          <PreviewSwiperSlide item={item} index={index} key={index} />
-        ))}
+        {items
+          .filter((item) => item.isVisible === true)
+          .map((item, index) => (
+            <PreviewSwiperSlide item={item} index={index} key={index} />
+          ))}
       </Swiper>
       <Swiper
         modules={[FreeMode, Navigation, Thumbs]}
@@ -67,12 +69,18 @@ const SlidesPreview = memo(({ items, setActiveIndex }) => {
         onSlideChange={() => console.log("slide change")}
         className="mySwiper"
       >
-        {items.map((item, index) => (
-          <SwiperSlide key={index}>
-            {item.mediaType === "image" && <PreviewImage src={item.imgUrl + "?x-request=html"} />}
-            {item.mediaType === "video" && <PreviewVideo src={item.imgUrl + "?x-request=html"} />}
-          </SwiperSlide>
-        ))}
+        {items
+          .filter((item) => item.isVisible === true)
+          .map((item, index) => (
+            <SwiperSlide key={index}>
+              {item.mediaType === "image" && (
+                <PreviewImage src={item.imgUrl + "?x-request=html"} />
+              )}
+              {item.mediaType === "video" && (
+                <PreviewVideo src={item.imgUrl + "?x-request=html"} />
+              )}
+            </SwiperSlide>
+          ))}
       </Swiper>
     </Box>
   );

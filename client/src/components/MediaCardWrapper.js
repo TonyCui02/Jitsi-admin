@@ -90,7 +90,7 @@ const MediaCardWrapper = memo(
     return (
       <Box sx={{ paddingTop: "26px", display: "block" }}>
         <CardHelpers>
-          <Typography>Item {index+1}</Typography>
+          <Typography>Item {index + 1}</Typography>
           <IconButton onClick={() => updateItemVisibility(index, !isVisible)}>
             {isVisible ? <VisibilityOutlinedIcon /> : <VisibilityOffIcon />}
           </IconButton>
@@ -140,7 +140,8 @@ const MediaCardWrapper = memo(
             display: "flex",
             padding: 8,
             opacity: isVisible ? "100%" : "60%",
-            backgroundColor: isVisible ? "white" : "grey"
+            backgroundColor: isVisible ? "white" : "grey",
+            pointerEvents: isVisible ? "initial" : "none",
           }}
         >
           <UploaderBox
