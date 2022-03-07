@@ -17,9 +17,9 @@ export default function SearchAppBar({ setPresentMode }) {
         sx={{ backgroundColor: "white", color: "black" }}
       >
         <Toolbar sx={{ height: "64px" }}>
-          <Button size="large" startIcon={<ArrowBackIosIcon />}>
+          {/* <Button size="large" startIcon={<ArrowBackIosIcon />}>
             Home
-          </Button>
+          </Button> */}
           <Box sx={{ flexGrow: 1 }} />
           <Box
             sx={{
