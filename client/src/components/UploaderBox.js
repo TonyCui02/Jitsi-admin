@@ -141,13 +141,13 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
             </CustomIconButton>
             {mediaType === "image" ? (
               <PreviewImage
-                src={imgUrl}
+                src={imgUrl + "?x-request=html"} 
                 alt="test"
                 onClick={() => handleImagePreview()}
               />
             ) : (
               <PreviewVideo
-                src={imgUrl}
+                src={imgUrl + "?x-request=html"}
                 alt="test"
                 onClick={() => handleImagePreview()}
               />

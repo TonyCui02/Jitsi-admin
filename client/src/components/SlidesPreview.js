@@ -69,8 +69,8 @@ const SlidesPreview = memo(({ items, setActiveIndex }) => {
       >
         {items.map((item, index) => (
           <SwiperSlide key={index}>
-            {item.mediaType === "image" && <PreviewImage src={item.imgUrl} />}
-            {item.mediaType === "video" && <PreviewVideo src={item.imgUrl} />}
+            {item.mediaType === "image" && <PreviewImage src={item.imgUrl + "?x-request=html"} />}
+            {item.mediaType === "video" && <PreviewVideo src={item.imgUrl + "?x-request=html"} />}
           </SwiperSlide>
         ))}
       </Swiper>

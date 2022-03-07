@@ -87,10 +87,10 @@ const PresentDrawer = ({
         </Grid>
         <TextField
           id="outlined-multiline-flexible"
-          label="Multiline"
+          label="Notes"
           multiline
           rows={20}
-          // maxRows={20}
+          placeholder="Add some notes about this media"
           color="secondary"
           fullWidth
           value={activeItem?.description || ""}
