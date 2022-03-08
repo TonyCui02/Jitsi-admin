@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 
-export default function SearchAppBar({ setPresentMode }) {
+export default function SearchAppBar({ setPresentMode, tourName, setTourName }) {
   const theme = useTheme();
 
   return (
@@ -17,9 +17,9 @@ export default function SearchAppBar({ setPresentMode }) {
         sx={{ backgroundColor: "white", color: "black" }}
       >
         <Toolbar sx={{ height: "64px" }}>
-          {/* <Button size="large" startIcon={<ArrowBackIosIcon />}>
+          <Button size="large" startIcon={<ArrowBackIosIcon />}>
             Home
-          </Button> */}
+          </Button>
           <Box sx={{ flexGrow: 1 }} />
           <Box
             sx={{
@@ -33,6 +33,8 @@ export default function SearchAppBar({ setPresentMode }) {
               size="small"
               label="Tour name"
               id="outlined-size-normal"
+              value={tourName || ""}
+              onChange={(e) => setTourName(e.target.value)}
             />
             <Box sx={{ width: 5 }} />
             <Button

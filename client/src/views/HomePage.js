@@ -19,6 +19,7 @@ const HomePage = () => {
     },
   ]);
   const [presentMode, setPresentMode] = useState(false);
+  const [tourName, setTourName] = useState("");
 
   const addItem = () => {
     setItems([
@@ -93,12 +94,22 @@ const HomePage = () => {
       console.log("saved data: " + JSON.stringify(savedItemsData));
       setItems(savedItemsData);
     }
+    if (localStorage.getItem("tourName")) {
+      console.log("user already has saved tour name");
+      const tourName = JSON.parse(localStorage.getItem("tourName"));
+      console.log("saved tourName: " + JSON.stringify(tourName));
+      setTourName(tourName);
+    }
   }, []);
 
   useEffect(() => {
     localStorage.setItem("itemsData", JSON.stringify(items));
     // console.log(items);
   }, [items]);
+
+  useEffect(() => {
+    localStorage.setItem("tourName", JSON.stringify(tourName));
+  }, [tourName]);
 
   return (
     <HomePageLayout>
@@ -116,7 +127,11 @@ const HomePage = () => {
             minHeight: "100vh",
           }}
         >
-          <TopNavbar setPresentMode={setPresentMode} />
+          <TopNavbar
+            setPresentMode={setPresentMode}
+            tourName={tourName}
+            setTourName={setTourName}
+          />
           <Container maxWidth="md">
             <Grid sx={{ paddingTop: "48px" }} container>
               <Typography variant="h3">Edit tour</Typography>
