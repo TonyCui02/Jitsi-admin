@@ -161,6 +161,7 @@ const MediaCardWrapper = memo(
                 autoComplete="off"
               >
                 <TextField
+                  required
                   fullWidth
                   label="Title"
                   value={title || ""}

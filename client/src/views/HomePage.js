@@ -131,6 +131,7 @@ const HomePage = () => {
             setPresentMode={setPresentMode}
             tourName={tourName}
             setTourName={setTourName}
+            items={items}
           />
           <Container maxWidth="md">
             <Grid sx={{ paddingTop: "48px" }} container>

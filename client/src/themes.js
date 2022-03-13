@@ -22,6 +22,9 @@ export const lightTheme = createTheme({
     h5: {
       fontWeight: 500,
     },
+    subtitle1: {
+      fontWeight: 500
+    }
   },
 });
 
