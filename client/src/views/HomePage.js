@@ -191,7 +191,7 @@ const Homepage = () => {
           </Grid>
           <Grid item xs={12}>
             <Box display="flex">
-              {["a", "b", "c"].map((item) => (
+              {["a", "b", "d"].map((item) => (
                 <Box width="360px" px="12px">
                   <PreviewImage
                     src="https://test-bucket-jitsi-admin.s3.ap-southeast-2.amazonaws.com/1-ClockTower-360-min.jpg"
