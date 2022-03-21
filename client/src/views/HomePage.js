@@ -1,180 +1,214 @@
-import { useTheme } from "@emotion/react";
-import AddIcon from "@mui/icons-material/Add";
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
-import MediaCardWrapper from "../components/MediaCardWrapper";
-import TopNavbar from "../components/TopNavbar";
-import HomePageLayout from "../layouts/HomePageLayout";
-import PresentView from "./PresentView";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import HomeIcon from "@mui/icons-material/Home";
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  AppBar,
+  Button,
+  Drawer,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem
+} from "@mui/material";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import { styled } from "@mui/material/styles";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useState } from "react";
 
-const HomePage = () => {
-  const theme = useTheme();
-  const [items, setItems] = useState([
-    {
-      imgUrl: "",
-      title: "",
-      description: "",
-      mediaType: "image",
-      isVisible: true,
-    },
-  ]);
-  const [presentMode, setPresentMode] = useState(false);
-  const [tourName, setTourName] = useState("");
+const drawerWidth = 240;
 
-  const addItem = () => {
-    setItems([
-      ...items,
-      {
-        imgUrl: "",
-        title: "",
-        description: "",
-        mediaType: "image",
-        isVisible: true,
-      },
-    ]);
+const PreviewImage = styled("img")(() => ({
+  display: "block",
+  width: "100%",
+  borderRadius: "10px",
+  transition: "opacity 0.3s",
+  opacity: "1",
+  ":hover": {
+    opacity: "0.9",
+  },
+  cursor: "pointer",
+}));
+
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    }),
+  })
+);
+
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: "flex-end",
+}));
+
+const Homepage = () => {
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [open, setOpen] = React.useState(true);
+  const toggleDrawer = () => {
+    setOpen(!open);
   };
 
-  const deleteItem = useCallback((id) => {
-    setItems((prevItems) => prevItems.filter((item, index) => index !== id));
-  }, []); // No dependencies
+  const handleCreateTour = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
 
-  const updateItem = useCallback((id, newItem) => {
-    setItems((prevItems) =>
-      prevItems.map((item, index) => {
-        return index !== id ? item : newItem;
-      })
-    );
-  }, []); // No dependencies
-
-  const moveItemUp = useCallback((index) => {
-    setItems((prevItems) => [
-      ...prevItems.slice(0, index - 1),
-      prevItems[index],
-      prevItems[index - 1],
-      ...prevItems.slice(index + 1),
-    ]);
-  }, []); // No dependencies
-
-  const moveItemDown = useCallback((index) => {
-    setItems((prevItems) => [
-      ...prevItems.slice(0, index),
-      prevItems[index + 1],
-      prevItems[index],
-      ...prevItems.slice(index + 2),
-    ]);
-  }, []); // No dependencies
-
-  const addItemAfter = useCallback((index) => {
-    setItems((prevItems) => [
-      ...prevItems.slice(0, index + 1),
-      {
-        imgUrl: "",
-        title: "",
-        description: "",
-        mediaType: "image",
-        isVisible: true,
-      },
-      ...prevItems.slice(index + 1),
-    ]);
-  }, []); // No dependencies
-
-  const copyItem = useCallback((index) => {
-    setItems((prevItems) => [
-      ...prevItems.slice(0, index + 1),
-      prevItems[index],
-      ...prevItems.slice(index + 1),
-    ]);
-  }, []); // No dependencies
-
-  useEffect(() => {
-    console.log("mount");
-    if (localStorage.getItem("itemsData")) {
-      console.log("user already has saved data");
-      const savedItemsData = JSON.parse(localStorage.getItem("itemsData"));
-      console.log("saved data: " + JSON.stringify(savedItemsData));
-      setItems(savedItemsData);
-    }
-    if (localStorage.getItem("tourName")) {
-      console.log("user already has saved tour name");
-      const tourName = JSON.parse(localStorage.getItem("tourName"));
-      console.log("saved tourName: " + JSON.stringify(tourName));
-      setTourName(tourName);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("itemsData", JSON.stringify(items));
-    // console.log(items);
-  }, [items]);
-
-  useEffect(() => {
-    localStorage.setItem("tourName", JSON.stringify(tourName));
-  }, [tourName]);
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
 
   return (
-    <HomePageLayout>
-      {presentMode ? (
-        <PresentView
-          setPresentMode={setPresentMode}
-          items={items}
-          updateItem={updateItem}
-        />
-      ) : (
-        <Box
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundColor: "white",
+          color: "black",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      >
+        <Toolbar
           sx={{
-            backgroundColor: theme.palette.grey[200],
-            height: "100%",
-            minHeight: "100vh",
+            height: "64px",
+            pr: "24px", // keep right padding when drawer closed
           }}
         >
-          <TopNavbar
-            setPresentMode={setPresentMode}
-            tourName={tourName}
-            setTourName={setTourName}
-            items={items}
-          />
-          <Container maxWidth="md">
-            <Grid sx={{ paddingTop: "48px" }} container>
-              <Typography variant="h3">Edit tour</Typography>
-              {items.map((item, index) => (
-                <Grid item xs={12} key={index}>
-                  <MediaCardWrapper
-                    index={index}
-                    title={item.title}
-                    description={item.description}
-                    imgUrl={item.imgUrl}
-                    mediaType={item.mediaType}
-                    isVisible={item.isVisible}
-                    deleteItem={deleteItem}
-                    // // updateItem={updateItem}
-                    totalItems={items.length}
-                    // swapItems={swapItems}
-                    moveItemUp={moveItemUp}
-                    moveItemDown={moveItemDown}
-                    addItemAfter={addItemAfter}
-                    // updateItemDescription={updateItemDescription}
-                    // updateItemTitle={updateItemTitle}
-                    updateItem={updateItem}
-                    copyItem={copyItem}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-            <Box sx={{ padding: "32px 0px 84px 0px" }}>
-              <Button
-                startIcon={<AddIcon />}
-                fullWidth
-                variant="contained"
-                onClick={() => addItem()}
-              >
-                Add Item
-              </Button>
-            </Box>
-          </Container>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={toggleDrawer}
+            sx={{
+              marginRight: "36px",
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            component="h1"
+            variant="h5"
+            color="primary"
+            noWrap
+            sx={{ flexGrow: 1 }}
+          >
+            Jitsi360 Admin
+          </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            sx={{ height: 40 }}
+            variant="contained"
+            onClick={handleCreateTour}
+          >
+            Create A Tour
+          </Button>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            <MenuItem onClick={handleCloseUserMenu}>
+              <ListItemIcon>
+                <AddCircleIcon />
+              </ListItemIcon>
+              <ListItemText textAlign="center">New</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <ListItemIcon>
+                <ContentCopyIcon />
+              </ListItemIcon>
+              <ListItemText textAlign="center">Duplicate Existing</ListItemText>
+            </MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={open}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: "auto" }}>
+          <List>
+            {["Home"].map((text, index) => (
+              <ListItem selected button key={text}>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
         </Box>
-      )}
-    </HomePageLayout>
+      </Drawer>
+      <Main open={open}>
+        <DrawerHeader />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h2">Tours</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Box display="flex">
+              {["a", "b", "c"].map((item) => (
+                <Box width="360px" px="12px">
+                  <PreviewImage
+                    src="https://test-bucket-jitsi-admin.s3.ap-southeast-2.amazonaws.com/1-ClockTower-360-min.jpg"
+                    alt="test"
+                  />
+                  <Box py="12px">
+                    <Typography variant="h6">Tour name</Typography>
+                    <Typography variant="body1">Tour description</Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </Grid>
+        </Grid>
+      </Main>
+    </Box>
   );
 };
 
-export default HomePage;
+export default Homepage;

@@ -5,8 +5,8 @@ import { useState } from "react";
 import TopNavbar from "../components/TopNavbar";
 import PresentView from "../views/PresentView";
 
-const HomePageLayout = ({ children }) => {
+const TourEditorLayout = ({ children }) => {
   return <>{children}</>;
 };
 
-export default HomePageLayout;
+export default TourEditorLayout;
