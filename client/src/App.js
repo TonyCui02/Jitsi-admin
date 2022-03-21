@@ -15,8 +15,6 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<TourEditor />} />
-        </Routes>
-        <Routes>
           <Route path="/home" element={<Homepage />} />
         </Routes>
       </BrowserRouter>
