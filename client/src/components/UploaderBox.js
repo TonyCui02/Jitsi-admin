@@ -1,10 +1,7 @@
 import { useTheme } from "@emotion/react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  CardActionArea,
-  Chip, Typography
-} from "@mui/material";
+import { CardActionArea, Chip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
@@ -69,7 +66,7 @@ const CustomIconButton = styled("button")(({ theme }) => ({
   ":hover": {
     backgroundColor: theme.palette.grey[200],
   },
-  boxShadow: "4px 8px 19px -3px rgba(0,0,0,0.27)"
+  boxShadow: "4px 8px 19px -3px rgba(0,0,0,0.27)",
 }));
 
 const MediaTypeChip = styled(Chip)(({ theme }) => ({
@@ -105,20 +102,23 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
         )
       );
 
+      console.log(acceptedFiles[0]);
       const presignedUrl = await getPresignedUrl(acceptedFiles[0]);
       console.log(presignedUrl);
-      const response = await pushFileToS3(presignedUrl, acceptedFiles[0]);
-      console.log(response);
-      const url = response.config.url;
-      const imgUrl = url.split("?", 1)[0];
-      console.log(imgUrl);
+      if (presignedUrl) {
+        const response = await pushFileToS3(presignedUrl, acceptedFiles[0]);
+        console.log(response);
+        const url = response.config.url;
+        const imgUrl = url.split("?", 1)[0];
+        console.log(imgUrl);
 
-      setImageUploaded(true);
+        setImageUploaded(true);
 
-      if (acceptedFiles[0].type.match("video.*")) {
-        updateItemImage(index, imgUrl, "video");
-      } else {
-        updateItemImage(index, imgUrl, "image");
+        if (acceptedFiles[0].type.match("video.*")) {
+          updateItemImage(index, imgUrl, "video");
+        } else {
+          updateItemImage(index, imgUrl, "image");
+        }
       }
     },
     [index, updateItemImage]
@@ -141,7 +141,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
             </CustomIconButton>
             {mediaType === "image" ? (
               <PreviewImage
-                src={imgUrl + "?x-request=html"} 
+                src={imgUrl + "?x-request=html"}
                 alt="test"
                 onClick={() => handleImagePreview()}
               />

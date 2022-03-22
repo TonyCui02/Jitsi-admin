@@ -1,22 +1,20 @@
 import axios from "axios";
 
 async function getPresignedUrl(file) {
-  const params = new URLSearchParams();
-  params.append("filename", file.name);
-  params.append("filetype", file.type);
-
-  const response = await axios.get(
-    process.env.PRESIGNED_URL_LAMBDA,
-    {
+  try {
+    const response = await axios.get("https://r91ns3kje6.execute-api.ap-southeast-2.amazonaws.com/default/getPresignedUrl", {
       params: {
         filename: file.name,
         filetype: file.type,
       },
-    }
-  );
-
-  const presignedUrl = response.data.uploadURL;
-  return presignedUrl;
+    });
+    console.log(response);
+    const presignedUrl = response.data.uploadURL;
+    console.log(presignedUrl);
+    return presignedUrl;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 async function pushFileToS3(presignedUrl, file) {

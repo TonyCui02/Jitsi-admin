@@ -29,7 +29,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "https://vercel.com/tonycui02/jitsi-admin",
   "eslintConfig": {
     "extends": [
       "react-app",
