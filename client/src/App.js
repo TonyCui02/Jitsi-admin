@@ -2,7 +2,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { lightTheme } from "./themes";
 import TourEditor from "./views/TourEditor";
-import Homepage from "./views/Homepage";
+import HomePage from "./views/HomePage";
 import "./App.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -15,7 +15,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<TourEditor />} />
-          {/* <Route path="/home" element={<Homepage />} /> */}
+          <Route path="/home" element={<HomePage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

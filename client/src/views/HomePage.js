@@ -65,7 +65,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-const Homepage = () => {
+const HomePage = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
@@ -211,4 +211,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default HomePage;
