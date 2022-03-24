@@ -33,6 +33,7 @@ export default function SearchAppBar({
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [queryString, setQueryString] = useState("");
   const [invalidItemsAlert, setInvalidItemsAlert] = useState(false);
+  const [invalidText, setInvalidText] = useState("");
   const [copyText, setCopyText] = useState("Copy");
 
   const closeInvalidItemsAlert = () => {
@@ -40,10 +41,11 @@ export default function SearchAppBar({
   };
 
   const handlePublish = (event) => {
-    if (!validateItems(items)) {
+    const visibleItems = items.filter((item) => item.isVisible === true);
+    if (!validateItems(visibleItems)) {
       setInvalidItemsAlert(true);
     } else {
-      setQueryString(generateQueryString(items));
+      setQueryString(generateQueryString(visibleItems));
       setAnchorElUser(event.currentTarget);
     }
   };
@@ -62,17 +64,12 @@ export default function SearchAppBar({
     let randomID = crypto.randomUUID();
     let url = `https://360-test1.envisage-ar.com/${randomID}?`;
     let queryStringArr = [];
-    const visibleItems = items.filter((item) => item.isVisible === true);
-    for (let i = 0; i < visibleItems.length; i++) {
-      // queryString += `image[${i}][name]=${visibleItems[i].title}&image[${i}][src]=${visibleItems[i].imgUrl}`
-      // if (i !== items.length - 1) {
-      //   queryString += "&";
-      // }
+    for (let i = 0; i < items.length; i++) {
       queryStringArr.push(
-        `image[${i}][name]=` + encodeURIComponent(visibleItems[i].title)
+        `image[${i}][name]=` + encodeURIComponent(items[i].title)
       );
       queryStringArr.push(
-        `image[${i}][src]=` + encodeURIComponent(visibleItems[i].imgUrl)
+        `image[${i}][src]=` + encodeURIComponent(items[i].imgUrl)
       );
     }
     let queryString = queryStringArr.join("&");
@@ -81,11 +78,21 @@ export default function SearchAppBar({
   };
 
   const validateItems = (items) => {
+    if (items.length <= 0) {
+      setInvalidText(`Oops, you need at least one media to upload`);
+      return false;
+    }
+
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      if (item.imgUrl === "" || item.imgUrl === null) {
-        return false;
-      } else if (item.title === "" || item.title === null) {
+      if (
+        item.imgUrl === "" ||
+        item.imgUrl === null ||
+        item.title === "" ||
+        item.title === null
+      ) {
+        setInvalidText(`There are item(s) with missing title or 
+        image/video`);
         return false;
       }
     }
@@ -159,14 +166,14 @@ export default function SearchAppBar({
                 >
                   <Grid item xs={12}>
                     <Typography gutterBottom variant="subtitle1">
-                      Generated query string
+                      Generated link
                     </Typography>
                   </Grid>
                   <Divider sx={{ width: "100%" }} />
                   <Grid item xs={12}>
                     <Typography variant="body2">
-                      Add the generated query string to the end of your Jitsi
-                      360 meeting url to publish your tour to Jitsi.
+                      Paste the link into your browser to start a new meeting in
+                      Jitsi
                       <br></br>
                       <strong>
                         (Your notes will not be uploaded to Jitsi)
@@ -218,8 +225,7 @@ export default function SearchAppBar({
           closeText="Doesn't Work!"
         >
           <AlertTitle>Invalid items</AlertTitle>
-          There are item(s) with missing <strong>title</strong> or{" "}
-          <strong>image/video</strong>
+          {invalidText}
         </Alert>
       </Dialog>
     </>
