@@ -33,7 +33,7 @@ export default function SearchAppBar({
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [queryString, setQueryString] = useState("");
   const [invalidItemsAlert, setInvalidItemsAlert] = useState(false);
-  const [copyText, setCopyText] = useState("Copy")
+  const [copyText, setCopyText] = useState("Copy");
 
   const closeInvalidItemsAlert = () => {
     setInvalidItemsAlert(!invalidItemsAlert);
@@ -50,25 +50,34 @@ export default function SearchAppBar({
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-    setCopyText("copy")
+    setCopyText("copy");
   };
 
   const handleCopyClick = () => {
     navigator.clipboard.writeText(queryString);
-    setCopyText("Copied")
-  }
+    setCopyText("Copied");
+  };
 
   const generateQueryString = (items) => {
-    let queryString = "?"
+    let randomID = crypto.randomUUID();
+    let url = `https://360-test1.envisage-ar.com/${randomID}?`;
+    let queryStringArr = [];
     const visibleItems = items.filter((item) => item.isVisible === true);
     for (let i = 0; i < visibleItems.length; i++) {
-      queryString += `image[${i}][name]=${visibleItems[i].title}&image[${i}][src]=${visibleItems[i].imgUrl}`
-      if (i !== items.length - 1) {
-        queryString += "&";
-      }
+      // queryString += `image[${i}][name]=${visibleItems[i].title}&image[${i}][src]=${visibleItems[i].imgUrl}`
+      // if (i !== items.length - 1) {
+      //   queryString += "&";
+      // }
+      queryStringArr.push(
+        `image[${i}][name]=` + encodeURIComponent(visibleItems[i].title)
+      );
+      queryStringArr.push(
+        `image[${i}][src]=` + encodeURIComponent(visibleItems[i].imgUrl)
+      );
     }
+    let queryString = queryStringArr.join("&");
 
-    return queryString
+    return url + queryString;
   };
 
   const validateItems = (items) => {
@@ -159,7 +168,9 @@ export default function SearchAppBar({
                       Add the generated query string to the end of your Jitsi
                       360 meeting url to publish your tour to Jitsi.
                       <br></br>
-                      <strong>(Your notes will not be uploaded to Jitsi)</strong>
+                      <strong>
+                        (Your notes will not be uploaded to Jitsi)
+                      </strong>
                     </Typography>
                   </Grid>
                   <Grid item xs={9}>
@@ -176,7 +187,11 @@ export default function SearchAppBar({
                     />
                   </Grid>
                   <Grid item sx={{ display: "flex" }} xs={3}>
-                    <Button fullWidth variant="outlined" onClick={() => handleCopyClick()}>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      onClick={() => handleCopyClick()}
+                    >
                       {copyText}
                     </Button>
                   </Grid>
@@ -203,7 +218,7 @@ export default function SearchAppBar({
           closeText="Doesn't Work!"
         >
           <AlertTitle>Invalid items</AlertTitle>
-          There are item(s) with missing <strong>title</strong>{" "}or {" "}
+          There are item(s) with missing <strong>title</strong> or{" "}
           <strong>image/video</strong>
         </Alert>
       </Dialog>
