@@ -1,7 +1,7 @@
 import { useTheme } from "@emotion/react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import MediaCardWrapper from "../components/MediaCardWrapper";
 import TopNavbar from "../components/TopNavbar";
 import TourEditorLayout from "../layouts/TourEditorLayout";
@@ -165,7 +165,9 @@ const TourEditor = () => {
                 startIcon={<AddIcon />}
                 fullWidth
                 variant="contained"
-                onClick={() => addItem()}
+                onClick={() => {
+                  addItem();
+                }}
               >
                 Add Item
               </Button>

@@ -135,7 +135,13 @@ const MediaCardWrapper = memo(
               </IconButton>
             </>
           )}
-          <IconButton aria-label="copy" onClick={() => copyItem(index)}>
+          <IconButton
+            aria-label="copy"
+            onClick={() => {
+              executeScroll("down");
+              copyItem(index);
+            }}
+          >
             <CopyAllIcon />
           </IconButton>
           {totalItems > 1 && (
