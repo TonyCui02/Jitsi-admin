@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box, styled } from "@mui/system";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useRef } from "react";
 import UploaderBox from "./UploaderBox";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -39,6 +39,22 @@ const MediaCardWrapper = memo(
     addItemAfter,
     copyItem,
   }) => {
+    const myRef = useRef(null);
+
+    const executeScroll = (type) => {
+      if (type === "down") {
+        window.scrollTo({
+          behavior: "smooth",
+          top: myRef.current.offsetTop + 580,
+        });
+      } else {
+        window.scrollTo({
+          behavior: "smooth",
+          top: myRef.current.offsetTop - 580,
+        });
+      }
+    };
+
     const updateItemTitle = (index, title) => {
       const newItem = {
         title: title,
@@ -88,7 +104,7 @@ const MediaCardWrapper = memo(
     });
 
     return (
-      <Box sx={{ paddingTop: "26px", display: "block" }}>
+      <Box ref={myRef} sx={{ paddingTop: "26px", display: "block" }}>
         <CardHelpers>
           <Typography>Item {index + 1}</Typography>
           <IconButton onClick={() => updateItemVisibility(index, !isVisible)}>
@@ -101,6 +117,7 @@ const MediaCardWrapper = memo(
                 disabled={index === 0 ? true : false}
                 aria-label="move up"
                 onClick={() => {
+                  executeScroll("up");
                   moveItemUp(index);
                 }}
               >
@@ -110,6 +127,7 @@ const MediaCardWrapper = memo(
                 disabled={index === totalItems - 1 ? true : false}
                 aria-label="move down"
                 onClick={() => {
+                  executeScroll("down");
                   moveItemDown(index);
                 }}
               >
@@ -129,6 +147,7 @@ const MediaCardWrapper = memo(
             aria-label="add after"
             onClick={() => {
               addItemAfter(index);
+              executeScroll("down");
             }}
           >
             <AddBoxOutlinedIcon />
