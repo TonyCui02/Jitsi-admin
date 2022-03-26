@@ -6,6 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 const CardItem = styled("div")(({ theme }) => ({
   padding: "1rem",
@@ -61,7 +62,7 @@ const TourCard = ({ id, tourName, tourPreviewImg, deleteTour }) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button onClick={() => deleteTour(id)} size="small">
+          <Button  onClick={() => deleteTour(id)} startIcon={<DeleteOutlineOutlinedIcon/>}>
             Delete
           </Button>
         </CardActions>
