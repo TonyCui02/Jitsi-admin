@@ -6,6 +6,7 @@ import MediaCardWrapper from "../components/MediaCardWrapper";
 import TopNavbar from "../components/TopNavbar";
 import TourEditorLayout from "../layouts/TourEditorLayout";
 import PresentView from "./PresentView";
+import { useParams } from "react-router-dom";
 
 const TourEditor = () => {
   const theme = useTheme();
@@ -20,6 +21,7 @@ const TourEditor = () => {
   ]);
   const [presentMode, setPresentMode] = useState(false);
   const [tourName, setTourName] = useState("");
+  let params = useParams();
 
   const addItem = () => {
     setItems([
@@ -88,28 +90,47 @@ const TourEditor = () => {
 
   useEffect(() => {
     console.log("mount");
-    if (localStorage.getItem("itemsData")) {
-      console.log("user already has saved data");
-      const savedItemsData = JSON.parse(localStorage.getItem("itemsData"));
-      console.log("saved data: " + JSON.stringify(savedItemsData));
-      setItems(savedItemsData);
-    }
-    if (localStorage.getItem("tourName")) {
-      console.log("user already has saved tour name");
-      const tourName = JSON.parse(localStorage.getItem("tourName"));
-      console.log("saved tourName: " + JSON.stringify(tourName));
+    if (localStorage.getItem("tours")) {
+      console.log("searching tours...");
+      const tours = JSON.parse(localStorage.getItem("tours"));
+      let tour = tours.find((o) => o.id === params.tourId);
+      console.log("found tour: " + tour.id);
+      let tourName = tour.tourName;
       setTourName(tourName);
+      setItems(tour.itemsData);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("itemsData", JSON.stringify(items));
-    // console.log(items);
-  }, [items]);
+    if (localStorage.getItem("tours")) {
+      console.log("searching tours...");
+      let tours = JSON.parse(localStorage.getItem("tours"));
+      let tour = tours.find((o, i) => {
+        if (o.id === params.tourId) {
+          tours[i].itemsData = items;
+          return true; // stop searching
+        }
+      });
+      tour.tourPreviewImg = items[0].imgUrl;
+      console.log("found tour: " + tour.id);
+      localStorage.setItem("tours", JSON.stringify(tours));
+    }
+  }, [items, params.tourId]);
 
   useEffect(() => {
-    localStorage.setItem("tourName", JSON.stringify(tourName));
-  }, [tourName]);
+    if (localStorage.getItem("tours")) {
+      console.log("searching tours...");
+      let tours = JSON.parse(localStorage.getItem("tours"));
+      let tour = tours.find((o) => o.id === params.tourId);
+      console.log("found tour: " + tour.id);
+      tour.tourName = tourName;
+      localStorage.setItem("tours", JSON.stringify(tours));
+    }
+  }, [params.tourId, tourName]);
+
+  useEffect(() => {
+    // console.log(params.tourId);
+  });
 
   return (
     <TourEditorLayout>

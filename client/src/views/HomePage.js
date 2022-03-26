@@ -4,8 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
-  Button,
-  Drawer,
+  Button, Drawer,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -20,22 +19,11 @@ import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import TourCard from "../components/TourCard";
 
 const drawerWidth = 240;
-
-const PreviewImage = styled("img")(() => ({
-  display: "block",
-  width: "100%",
-  borderRadius: "10px",
-  transition: "opacity 0.3s",
-  opacity: "1",
-  ":hover": {
-    opacity: "0.9",
-  },
-  cursor: "pointer",
-}));
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -67,18 +55,66 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const HomePage = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+  const [tours, setTours] = useState([]);
+  const [createdTour, setCreatedTour] = useState(null);
+  let navigate = useNavigate();
+  let location = useLocation();
+  let params = useParams();
 
-  const handleCreateTour = (event) => {
+  const openCreateTourMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const closeCreateTourMenu = () => {
     setAnchorElUser(null);
   };
+
+  const createTour = () => {
+    let newTour = {
+      id: crypto.randomUUID(),
+      tourName: "Untitled Tour",
+      tourPreviewImg: "",
+      itemsData: [],
+    };
+    newTour.itemsData[0] = {
+      imgUrl: "",
+      title: "",
+      description: "",
+      mediaType: "image",
+      isVisible: true,
+    };
+    setTours([...tours, newTour]);
+    setCreatedTour(newTour);
+  };
+
+  const deleteTour = useCallback((id) => {
+    console.log(id);
+    setTours((prevItems) => prevItems.filter((item, index) => item.id !== id));
+  }, []); // No dependencies
+
+  useEffect(() => {
+    console.log("mount");
+    if (localStorage.getItem("tours")) {
+      console.log("user already has saved data");
+      const savedToursDate = JSON.parse(localStorage.getItem("tours"));
+      console.log("saved data: " + JSON.stringify(savedToursDate));
+      setTours(savedToursDate);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tours", JSON.stringify(tours));
+  }, [tours]);
+
+  useEffect(() => {
+    if (createdTour) {
+      navigate(`/tours/${createdTour.id}`);
+    }
+  }, [createdTour, navigate]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -121,7 +157,7 @@ const HomePage = () => {
           <Button
             sx={{ height: 40 }}
             variant="contained"
-            onClick={handleCreateTour}
+            onClick={openCreateTourMenu}
           >
             Create A Tour
           </Button>
@@ -139,19 +175,25 @@ const HomePage = () => {
               horizontal: "right",
             }}
             open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
+            onClose={closeCreateTourMenu}
           >
-            <MenuItem onClick={handleCloseUserMenu}>
+            <MenuItem
+              onClick={() => {
+                createTour();
+                closeCreateTourMenu();
+              }}
+              disabled={createdTour !== null}
+            >
               <ListItemIcon>
                 <AddCircleIcon />
               </ListItemIcon>
-              <ListItemText textAlign="center">New</ListItemText>
+              <ListItemText>New</ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleCloseUserMenu}>
+            <MenuItem onClick={closeCreateTourMenu}>
               <ListItemIcon>
                 <ContentCopyIcon />
               </ListItemIcon>
-              <ListItemText textAlign="center">Duplicate Existing</ListItemText>
+              <ListItemText>Duplicate Existing</ListItemText>
             </MenuItem>
           </Menu>
         </Toolbar>
@@ -183,26 +225,34 @@ const HomePage = () => {
           </List>
         </Box>
       </Drawer>
-      <Main open={open}>
+      <Main open={open} sx={{ height: "100vh" }}>
         <DrawerHeader />
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h2">Tours</Typography>
+            <Typography px="16px" variant="h3">
+              Tours
+            </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Box display="flex">
-              {["a", "b", "d"].map((item) => (
-                <Box width="360px" px="12px">
-                  <PreviewImage
-                    src="https://test-bucket-jitsi-admin.s3.ap-southeast-2.amazonaws.com/1-ClockTower-360-min.jpg"
-                    alt="test"
+            <Box display="flex" sx={{ flexWrap: "wrap" }}>
+              {tours.length > 0 ? (
+                tours.map((item) => (
+                  <TourCard
+                    key={item.id}
+                    id={item.id}
+                    tourName={item.tourName}
+                    tourPreviewImg={item.tourPreviewImg}
+                    deleteTour={deleteTour}
                   />
-                  <Box py="12px">
-                    <Typography variant="h6">Tour name</Typography>
-                    <Typography variant="body1">Tour description</Typography>
-                  </Box>
+                ))
+              ) : (
+                <Box px="16px">
+                  <Typography variant="h6">No tours yet...</Typography>
+                  <Typography variant="subtitle1" color="text.secondary">
+                    Create a tour to get started
+                  </Typography>
                 </Box>
-              ))}
+              )}
             </Box>
           </Grid>
         </Grid>

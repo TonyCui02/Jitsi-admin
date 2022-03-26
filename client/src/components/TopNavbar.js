@@ -1,27 +1,24 @@
 import { useTheme } from "@emotion/react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import PublishIcon from "@mui/icons-material/Publish";
+import SlideshowIcon from "@mui/icons-material/Slideshow";
 import {
   Alert,
   AlertTitle,
-  Button,
-  Card,
-  Container,
-  Dialog,
+  Button, Dialog,
   Divider,
   Grid,
-  Menu,
-  MenuItem,
-  TextField,
-  Typography,
+  Menu, TextField,
+  Typography
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
-import SlideshowIcon from "@mui/icons-material/Slideshow";
-import PublishIcon from "@mui/icons-material/Publish";
 import { useState } from "react";
+import { Link as RouterLink } from 'react-router-dom';
+
 
 export default function SearchAppBar({
   setPresentMode,
@@ -107,7 +104,7 @@ export default function SearchAppBar({
           sx={{ backgroundColor: "white", color: "black" }}
         >
           <Toolbar sx={{ height: "64px" }}>
-            <Button size="large" startIcon={<ArrowBackIosIcon />}>
+            <Button component={RouterLink} to="/" size="large" startIcon={<ArrowBackIosIcon />}>
               Home
             </Button>
             <Box sx={{ flexGrow: 1 }} />

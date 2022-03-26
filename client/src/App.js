@@ -14,8 +14,8 @@ export default function App() {
     <ThemeProvider theme={lightTheme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<TourEditor />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />}/>
+          <Route path="/tours/:tourId" element={<TourEditor />}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
