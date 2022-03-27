@@ -91,7 +91,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
   };
 
   const onDrop = useCallback(
-    async (acceptedFiles) => {
+    async (acceptedFiles, rejectedFiles) => {
       // Do something with the files
       // console.log(acceptedFiles);
       setFiles(
@@ -103,6 +103,9 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
       );
 
       console.log(acceptedFiles[0]);
+      if (rejectedFiles.length > 0) {
+        return;
+      }
       const presignedUrl = await getPresignedUrl(acceptedFiles[0]);
       console.log(presignedUrl);
       if (presignedUrl) {
@@ -124,11 +127,16 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
     [index, updateItemImage]
   );
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const maxFileSize = 20000000;
+
+  const { getRootProps, getInputProps, fileRejections } = useDropzone({
     onDrop,
     accept: "image/*,video/*",
     multiple: false,
+    maxSize: maxFileSize,
   });
+
+  const isFileTooLarge = fileRejections.length > 0;
 
   return (
     <>
@@ -207,7 +215,13 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
               >
                 Drag and drop or click to upload
               </Typography>
+              {isFileTooLarge && (
+                <Typography variant="subtitle1" color="error.main">
+                  File exceeds maximum size of 20MB.
+                </Typography>
+              )}
             </Box>
+
             <Typography
               sx={{ flexGrow: 1, color: "text.secondary" }}
               variant="caption"
