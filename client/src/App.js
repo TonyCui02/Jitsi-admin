@@ -10,13 +10,15 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import LoginPage from "./views/LoginPage";
 import SignUpPage from "./views/SignUpPage";
+import { withAuthenticator } from "@aws-amplify/ui-react";
+import "@aws-amplify/ui-react/styles.css";
 
-export default function App() {
+const App = ({ signOut, user }) => {
   return (
     <ThemeProvider theme={lightTheme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage user={user} signOut={signOut}/>} />
           <Route path="/tours/:tourId" element={<TourEditor />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignUpPage />} />
@@ -25,3 +27,5 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
+export default withAuthenticator(App);
