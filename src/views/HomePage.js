@@ -4,12 +4,15 @@ import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
-  Button, Drawer,
+  Avatar,
+  Button,
+  Drawer,
   ListItem,
   ListItemIcon,
   ListItemText,
   Menu,
-  MenuItem
+  MenuItem,
+  Tooltip,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -22,9 +25,7 @@ import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import TourCard from "../components/TourCard";
-
 const drawerWidth = 240;
-
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
@@ -43,7 +44,6 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
     }),
   })
 );
-
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -53,8 +53,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-const HomePage = () => {
+const HomePage = ({ user, signOut }) => {
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [anchorElTour, setAnchorElTour] = useState(null);
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -65,11 +66,21 @@ const HomePage = () => {
   let location = useLocation();
   let params = useParams();
 
+  console.log(user);
+
   const openCreateTourMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+    setAnchorElTour(event.currentTarget);
   };
 
   const closeCreateTourMenu = () => {
+    setAnchorElTour(null);
+  };
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
@@ -90,12 +101,10 @@ const HomePage = () => {
     setTours([...tours, newTour]);
     setCreatedTour(newTour);
   };
-
   const deleteTour = useCallback((id) => {
     console.log(id);
     setTours((prevItems) => prevItems.filter((item, index) => item.id !== id));
   }, []); // No dependencies
-
   useEffect(() => {
     console.log("mount");
     if (localStorage.getItem("tours")) {
@@ -105,17 +114,14 @@ const HomePage = () => {
       setTours(savedToursDate);
     }
   }, []);
-
   useEffect(() => {
     localStorage.setItem("tours", JSON.stringify(tours));
   }, [tours]);
-
   useEffect(() => {
     if (createdTour) {
       navigate(`/tours/${createdTour.id}`);
     }
   }, [createdTour, navigate]);
-
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -154,48 +160,75 @@ const HomePage = () => {
             Jitsi360 Admin
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Button
-            sx={{ height: 40 }}
-            variant="contained"
-            onClick={openCreateTourMenu}
-          >
-            Create A Tour
-          </Button>
-          <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={closeCreateTourMenu}
-          >
-            <MenuItem
-              onClick={() => {
-                createTour();
-                closeCreateTourMenu();
-              }}
-              disabled={createdTour !== null}
+          <Box sx={{ display: "flex", gap: "18px" }}>
+            <Button
+              sx={{ height: 40 }}
+              variant="contained"
+              onClick={openCreateTourMenu}
             >
-              <ListItemIcon>
-                <AddCircleIcon />
-              </ListItemIcon>
-              <ListItemText>New</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={closeCreateTourMenu}>
-              <ListItemIcon>
-                <ContentCopyIcon />
-              </ListItemIcon>
-              <ListItemText>Duplicate Existing</ListItemText>
-            </MenuItem>
-          </Menu>
+              Create A Tour
+            </Button>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElTour}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElTour)}
+              onClose={closeCreateTourMenu}
+            >
+              <MenuItem
+                onClick={() => {
+                  createTour();
+                  closeCreateTourMenu();
+                }}
+                disabled={createdTour !== null}
+              >
+                <ListItemIcon>
+                  <AddCircleIcon />
+                </ListItemIcon>
+                <ListItemText>New</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={closeCreateTourMenu}>
+                <ListItemIcon>
+                  <ContentCopyIcon />
+                </ListItemIcon>
+                <ListItemText>Duplicate Existing</ListItemText>
+              </MenuItem>
+            </Menu>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <MenuItem onClick={() => handleCloseUserMenu, signOut}>
+                <Typography textAlign="center">Sign Out</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
