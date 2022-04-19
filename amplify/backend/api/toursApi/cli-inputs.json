@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "paths": {
+    "/tours": {
+      "name": "/tours",
+      "lambdaFunction": "toursFunction",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    }
+  }
+}

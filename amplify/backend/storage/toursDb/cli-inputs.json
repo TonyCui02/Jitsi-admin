@@ -1,0 +1,10 @@
+{
+  "resourceName": "toursDb",
+  "tableName": "tours",
+  "partitionKey": {
+    "fieldName": "tourName",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
