@@ -3,9 +3,12 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
+  Alert,
+  AlertTitle,
   AppBar,
   Avatar,
   Button,
+  Dialog,
   Drawer,
   ListItem,
   ListItemIcon,
@@ -63,6 +66,7 @@ const HomePage = ({ user, signOut }) => {
   };
   const [tours, setTours] = useState([]);
   const [createdTour, setCreatedTour] = useState(null);
+  const [toursExceededAlert, setToursExceededAlert] = useState(false);
   let navigate = useNavigate();
   let location = useLocation();
   let params = useParams();
@@ -85,7 +89,24 @@ const HomePage = ({ user, signOut }) => {
     setAnchorElUser(null);
   };
 
-  const createTour = async () => {
+  const toggleToursExceededAlert = () => {
+    setToursExceededAlert(!toursExceededAlert);
+  };
+
+  const tourLimitExceeded = () => {
+    const numTours = tours.length;
+    console.log(numTours);
+    if (numTours >= 10) {
+      toggleToursExceededAlert();
+      return true;
+    }
+    return false;
+  };
+
+  const createTour = () => {
+    if (tourLimitExceeded() === true) {
+      return;
+    }
     const tourID = crypto.randomUUID();
     let newTour = {
       id: tourID,
@@ -100,19 +121,16 @@ const HomePage = ({ user, signOut }) => {
       mediaType: "image",
       isVisible: true,
     };
-    if (user.username !== undefined && user.username !== null && user.username !== "") {
-      // console.log(user.username)
-      // const putTourRes = await putTour(
-      //   user.userName,
-      //   newTour.id,
-      //   newTour.itemsData,
-      //   newTour.tourName
-      // );
-      // console.log(putTourRes);
+    if (
+      user.username !== undefined &&
+      user.username !== null &&
+      user.username !== ""
+    ) {
       setTours([...tours, newTour]);
       setCreatedTour(newTour);
     }
   };
+
   const deleteTour = useCallback((id) => {
     setTours((prevItems) => prevItems.filter((item, index) => item.id !== id));
   }, []); // No dependencies
@@ -125,7 +143,7 @@ const HomePage = ({ user, signOut }) => {
   const fetchUserTours = async () => {
     const userToursRes = await getUserTours(user.username);
     let fetchedTourData = userToursRes.map((item) => ({
-      id: item.SK.replace('tour_', ''),
+      id: item.SK.replace("tour_", ""),
       tourName: item.tourName,
       tourPreviewImg: item.tourPreviewImg || "",
       itemsData: item.tourData || null,
@@ -261,6 +279,17 @@ const HomePage = ({ user, signOut }) => {
           </Box>
         </Toolbar>
       </AppBar>
+      <Dialog open={toursExceededAlert} onClose={toggleToursExceededAlert}>
+        <Alert
+          severity="warning"
+          role="button"
+          onClose={() => toggleToursExceededAlert()}
+          closeText="Doesn't Work!"
+        >
+          <AlertTitle>Cannot create tour</AlertTitle>
+          you have reached the maximum limit of 10 tours
+        </Alert>
+      </Dialog>
       <Drawer
         sx={{
           width: drawerWidth,
