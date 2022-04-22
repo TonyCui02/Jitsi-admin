@@ -7,8 +7,10 @@ import TopNavbar from "../components/TopNavbar";
 import TourEditorLayout from "../layouts/TourEditorLayout";
 import PresentView from "./PresentView";
 import { useParams } from "react-router-dom";
+import debounce from "lodash.debounce";
+import { getTour, putTour } from "../api/api";
 
-const TourEditor = () => {
+const TourEditor = ({ user }) => {
   const theme = useTheme();
   const [items, setItems] = useState([
     {
@@ -20,8 +22,9 @@ const TourEditor = () => {
     },
   ]);
   const [presentMode, setPresentMode] = useState(false);
-  const [tourName, setTourName] = useState("");
+  const [tourName, setTourName] = useState("Untitled Tour");
   let params = useParams();
+  const tourID = params.tourId;
 
   const addItem = () => {
     setItems([
@@ -88,49 +91,84 @@ const TourEditor = () => {
     ]);
   }, []); // No dependencies
 
+  const fetchItems = async () => {
+    const tourDataRes = await getTour(user.username, tourID);
+    console.log(tourDataRes);
+    if (tourDataRes["tourData"]) {
+      setItems(tourDataRes["tourData"]);
+    }
+    if (tourDataRes["tourName"]) {
+      setTourName(tourDataRes["tourName"]);
+    }
+  };
+
   useEffect(() => {
     console.log("mount");
-    if (localStorage.getItem("tours")) {
-      console.log("searching tours...");
-      const tours = JSON.parse(localStorage.getItem("tours"));
-      let tour = tours.find((o) => o.id === params.tourId);
-      console.log("found tour: " + tour.id);
-      let tourName = tour.tourName;
-      setTourName(tourName);
-      setItems(tour.itemsData);
-    }
+    // if (localStorage.getItem("tours")) {
+    //   console.log("searching tours...");
+    //   const tours = JSON.parse(localStorage.getItem("tours"));
+    //   let tour = tours.find((o) => o.id === params.tourId);
+    //   console.log("found tour: " + tour.id);
+    //   let tourName = tour.tourName;
+    //   setTourName(tourName);
+    //   setItems(tour.itemsData);
+    // }
+    fetchItems();
   }, []);
 
-  useEffect(() => {
-    if (localStorage.getItem("tours")) {
-      console.log("searching tours...");
-      let tours = JSON.parse(localStorage.getItem("tours"));
-      let tour = tours.find((o, i) => {
-        if (o.id === params.tourId) {
-          tours[i].itemsData = items;
-          return true; // stop searching
-        }
-      });
-      tour.tourPreviewImg = items[0].imgUrl;
-      console.log("found tour: " + tour.id);
-      localStorage.setItem("tours", JSON.stringify(tours));
-    }
-  }, [items, params.tourId]);
+  // useEffect(() => {
+  //   if (localStorage.getItem("tours")) {
+  //     console.log("searching tours...");
+  //     let tours = JSON.parse(localStorage.getItem("tours"));
+  //     let tour = tours.find((o, i) => {
+  //       if (o.id === params.tourId) {
+  //         tours[i].itemsData = items;
+  //         return true; // stop searching
+  //       }
+  //     });
+  //     tour.tourPreviewImg = items[0].imgUrl;
+  //     console.log("found tour: " + tour.id);
+  //     localStorage.setItem("tours", JSON.stringify(tours));
+  //     debounceFn(items);
+  //   }
+  // }, [items, params.tourId]);
 
-  useEffect(() => {
-    if (localStorage.getItem("tours")) {
-      console.log("searching tours...");
-      let tours = JSON.parse(localStorage.getItem("tours"));
-      let tour = tours.find((o) => o.id === params.tourId);
-      console.log("found tour: " + tour.id);
-      tour.tourName = tourName;
-      localStorage.setItem("tours", JSON.stringify(tours));
-    }
-  }, [params.tourId, tourName]);
+  // useEffect(() => {
+  //   if (localStorage.getItem("tours")) {
+  //     // console.log("searching tours...");
+  //     let tours = JSON.parse(localStorage.getItem("tours"));
+  //     let tour = tours.find((o) => o.id === params.tourId);
+  //     // console.log("found tour: " + tour.id);
+  //     tour.tourName = tourName;
+  //     localStorage.setItem("tours", JSON.stringify(tours));
+  //     debounceFn(tourName);
+  //   }
+  // }, [params.tourId, tourName]);
 
   useEffect(() => {
     // console.log(params.tourId);
   });
+
+  useEffect(() => {
+    debounceFn(items, tourName);
+  }, [items, tourName, params.tourId]);
+
+  const handleDebounceFn = (itemsData, tourName) => {
+    if (
+      user.username !== undefined &&
+      user.username !== null &&
+      user.username !== "" &&
+      tourID &&
+      itemsData &&
+      tourName
+    ) {
+      console.log(user.username)
+      putTour(user.username, tourID, itemsData, tourName);
+    }
+    console.log(itemsData, tourName);
+  };
+
+  const debounceFn = useCallback(debounce(handleDebounceFn, 1000), []);
 
   return (
     <TourEditorLayout>

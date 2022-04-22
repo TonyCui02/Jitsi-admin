@@ -1,8 +1,12 @@
 {
   "resourceName": "toursDb",
-  "tableName": "tours",
+  "tableName": "toursDb",
   "partitionKey": {
-    "fieldName": "tourName",
+    "fieldName": "PK",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "SK",
     "fieldType": "string"
   },
   "gsi": [],

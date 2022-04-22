@@ -17,16 +17,16 @@ AWS.config.update({ region: process.env.TABLE_REGION });
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-let tableName = "tours";
+let tableName = "toursDb";
 if (process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + '-' + process.env.ENV;
 }
 
-const userIdPresent = true; // TODO: update in case is required to use that definition
-const partitionKeyName = "tourName";
+const userIdPresent = false; // TODO: update in case is required to use that definition
+const partitionKeyName = "PK";
 const partitionKeyType = "S";
-const sortKeyName = "";
-const sortKeyType = "";
+const sortKeyName = "SK";
+const sortKeyType = "S";
 const hasSortKey = sortKeyName !== "";
 const path = "/tours";
 const UNAUTH = 'UNAUTH';
@@ -81,7 +81,7 @@ app.get(path + hashKeyPath, function(req, res) {
     KeyConditions: condition
   }
 
-  dynamodb.scan(queryParams, (err, data) => {
+  dynamodb.query(queryParams, (err, data) => {
     if (err) {
       res.statusCode = 500;
       res.json({error: 'Could not load items: ' + err});

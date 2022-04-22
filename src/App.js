@@ -18,14 +18,17 @@ const App = ({ signOut, user }) => {
     <ThemeProvider theme={lightTheme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage user={user} signOut={signOut}/>} />
-          <Route path="/tours/:tourId" element={<TourEditor />} />
+          <Route
+            path="/"
+            element={<HomePage user={user} signOut={signOut} />}
+          />
+          <Route path="/tours/:tourId" element={<TourEditor user={user} />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignUpPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
   );
-}
+};
 
 export default withAuthenticator(App);

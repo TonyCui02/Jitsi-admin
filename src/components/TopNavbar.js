@@ -6,19 +6,22 @@ import SlideshowIcon from "@mui/icons-material/Slideshow";
 import {
   Alert,
   AlertTitle,
-  Button, Dialog,
+  Button,
+  Dialog,
   Divider,
   Grid,
-  Menu, TextField,
-  Typography
+  Menu,
+  TextField,
+  Typography,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
-import { useState } from "react";
-import { Link as RouterLink } from 'react-router-dom';
-
+import { useCallback, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import debounce from "lodash.debounce";
+import { API } from "aws-amplify";
 
 export default function SearchAppBar({
   setPresentMode,
@@ -96,6 +99,19 @@ export default function SearchAppBar({
     return true;
   };
 
+  // const handleDebounceFn = (input) => {
+  //   console.log(input);
+  // };
+
+  // const debounceFn = useCallback(debounce(handleDebounceFn, 1000), []);
+
+  // const updateTourName = (e) => {
+  //   setTourName(e.target.value);
+  //   debounceFn(e.target.value);
+  // };
+
+  // const debouncedTourName = debounce(updateTourName, 100);
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -104,7 +120,12 @@ export default function SearchAppBar({
           sx={{ backgroundColor: "white", color: "black" }}
         >
           <Toolbar sx={{ height: "64px" }}>
-            <Button component={RouterLink} to="/" size="large" startIcon={<ArrowBackIosIcon />}>
+            <Button
+              component={RouterLink}
+              to="/"
+              size="large"
+              startIcon={<ArrowBackIosIcon />}
+            >
               Home
             </Button>
             <Box sx={{ flexGrow: 1 }} />

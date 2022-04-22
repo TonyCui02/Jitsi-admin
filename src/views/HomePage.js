@@ -25,6 +25,7 @@ import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import TourCard from "../components/TourCard";
+import { getUserTours, putTour, delTour } from "../api/api";
 const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -66,7 +67,7 @@ const HomePage = ({ user, signOut }) => {
   let location = useLocation();
   let params = useParams();
 
-  console.log(user);
+  // console.log(user);
 
   const openCreateTourMenu = (event) => {
     setAnchorElTour(event.currentTarget);
@@ -84,9 +85,10 @@ const HomePage = ({ user, signOut }) => {
     setAnchorElUser(null);
   };
 
-  const createTour = () => {
+  const createTour = async () => {
+    const tourID = crypto.randomUUID();
     let newTour = {
-      id: crypto.randomUUID(),
+      id: tourID,
       tourName: "Untitled Tour",
       tourPreviewImg: "",
       itemsData: [],
@@ -98,24 +100,52 @@ const HomePage = ({ user, signOut }) => {
       mediaType: "image",
       isVisible: true,
     };
-    setTours([...tours, newTour]);
-    setCreatedTour(newTour);
+    if (user.username !== undefined && user.username !== null && user.username !== "") {
+      // console.log(user.username)
+      // const putTourRes = await putTour(
+      //   user.userName,
+      //   newTour.id,
+      //   newTour.itemsData,
+      //   newTour.tourName
+      // );
+      // console.log(putTourRes);
+      setTours([...tours, newTour]);
+      setCreatedTour(newTour);
+    }
   };
   const deleteTour = useCallback((id) => {
-    console.log(id);
     setTours((prevItems) => prevItems.filter((item, index) => item.id !== id));
   }, []); // No dependencies
+
+  const deleteDbTour = async (username, tourId) => {
+    const deleteTourRes = await delTour(username, tourId);
+    console.log(deleteTourRes);
+  };
+
+  const fetchUserTours = async () => {
+    const userToursRes = await getUserTours(user.username);
+    let fetchedTourData = userToursRes.map((item) => ({
+      id: item.SK.replace('tour_', ''),
+      tourName: item.tourName,
+      tourPreviewImg: item.tourPreviewImg || "",
+      itemsData: item.tourData || null,
+    }));
+    // console.log(userToursRes);
+    console.log(fetchedTourData);
+    setTours(fetchedTourData);
+  };
   useEffect(() => {
     console.log("mount");
-    if (localStorage.getItem("tours")) {
-      console.log("user already has saved data");
-      const savedToursDate = JSON.parse(localStorage.getItem("tours"));
-      console.log("saved data: " + JSON.stringify(savedToursDate));
-      setTours(savedToursDate);
-    }
+    // if (localStorage.getItem("tours")) {
+    //   console.log("user already has saved data");
+    //   const savedToursDate = JSON.parse(localStorage.getItem("tours"));
+    //   console.log("saved data: " + JSON.stringify(savedToursDate));
+    //   setTours(savedToursDate);
+    // }
+    fetchUserTours();
   }, []);
   useEffect(() => {
-    localStorage.setItem("tours", JSON.stringify(tours));
+    // localStorage.setItem("tours", JSON.stringify(tours));
   }, [tours]);
   useEffect(() => {
     if (createdTour) {
@@ -224,7 +254,7 @@ const HomePage = ({ user, signOut }) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={() => handleCloseUserMenu, signOut}>
+              <MenuItem onClick={(() => handleCloseUserMenu, signOut)}>
                 <Typography textAlign="center">Sign Out</Typography>
               </MenuItem>
             </Menu>
@@ -275,7 +305,10 @@ const HomePage = ({ user, signOut }) => {
                     id={item.id}
                     tourName={item.tourName}
                     tourPreviewImg={item.tourPreviewImg}
-                    deleteTour={deleteTour}
+                    deleteTour={() => {
+                      deleteTour(item.id);
+                      deleteDbTour(user.username, item.id);
+                    }}
                   />
                 ))
               ) : (
