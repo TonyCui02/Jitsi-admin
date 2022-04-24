@@ -19,7 +19,7 @@
       "function": {
         "toursFunction": {
           "deploymentBucketName": "amplify-jitsiadmin-main-221525-deployment",
-          "s3Key": "amplify-builds/toursFunction-737a6b695038586b4c48-build.zip"
+          "s3Key": "amplify-builds/toursFunction-2f654e6567424c306646-build.zip"
         }
       }
     }

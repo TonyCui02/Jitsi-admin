@@ -136,7 +136,7 @@ const HomePage = ({ user, signOut }) => {
         tourName,
         tourPreviewImg
       );
-      console.log(putTourRes.success);
+      // console.log(putTourRes.success);
       if (putTourRes.success === "put call succeed!") {
         setTours([...tours, newTour]);
         setCreatedTour(newTour);
@@ -161,7 +161,7 @@ const HomePage = ({ user, signOut }) => {
       tourPreviewImg: item.tourPreviewImg || "",
       itemsData: item.tourData || null,
     }));
-    // console.log(userToursRes);
+    console.log(userToursRes);
     console.log(fetchedTourData);
     setTours(fetchedTourData);
   };

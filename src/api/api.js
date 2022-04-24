@@ -43,8 +43,13 @@ async function getTour(username, tourID) {
 async function getUserTours(username) {
   const apiName = "toursApi";
   const path = `/tours/user_${username}`;
+  const params = {
+    queryStringParameters: {
+      skBeginsWith: "tour",
+    },
+  };
 
-  return await API.get(apiName, path);
+  return await API.get(apiName, path, params);
 }
 
 async function putTour(username, tourID, itemsData, tourName, tourPreviewImg) {
