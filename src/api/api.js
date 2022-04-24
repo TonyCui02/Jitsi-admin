@@ -32,21 +32,22 @@ async function pushFileToS3(presignedUrl, file) {
   return response;
 }
 
-function getTour(username, tourID) {
+// Functions for amplify backend
+async function getTour(username, tourID) {
   const apiName = "toursApi";
   const path = `/tours/object/user_${username}/tour_${tourID}`;
 
-  return API.get(apiName, path);
+  return await API.get(apiName, path);
 }
 
-function getUserTours(username) {
+async function getUserTours(username) {
   const apiName = "toursApi";
   const path = `/tours/user_${username}`;
 
-  return API.get(apiName, path);
+  return await API.get(apiName, path);
 }
 
-function putTour(username, tourID, itemsData, tourName) {
+async function putTour(username, tourID, itemsData, tourName, tourPreviewImg) {
   const apiName = "toursApi";
   const path = "/tours";
   const myInit = {
@@ -54,18 +55,43 @@ function putTour(username, tourID, itemsData, tourName) {
       PK: "user_" + username,
       SK: "tour_" + tourID,
       tourData: itemsData,
-      tourName: tourName
+      tourName: tourName,
+      tourPreviewImg: tourPreviewImg,
     },
   };
 
-  return API.put(apiName, path, myInit);
+  return await API.put(apiName, path, myInit);
 }
 
-function delTour(username, tourID) {
+async function postTour(username, tourID, itemsData, tourName, tourPreviewImg) {
+  const apiName = "toursApi";
+  const path = "/tours";
+  const myInit = {
+    body: {
+      PK: "user_" + username,
+      SK: "tour_" + tourID,
+      tourData: itemsData,
+      tourName: tourName,
+      tourPreviewImg: tourPreviewImg,
+    },
+  };
+
+  return await API.post(apiName, path, myInit);
+}
+
+async function delTour(username, tourID) {
   const apiName = "toursApi";
   const path = `/tours/object/user_${username}/tour_${tourID}`;
 
-  return API.del(apiName, path);
+  return await API.del(apiName, path);
 }
 
-export { getPresignedUrl, pushFileToS3, getTour, putTour, getUserTours, delTour };
+export {
+  getPresignedUrl,
+  pushFileToS3,
+  getTour,
+  putTour,
+  postTour,
+  getUserTours,
+  delTour,
+};

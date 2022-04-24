@@ -103,31 +103,44 @@ const HomePage = ({ user, signOut }) => {
     return false;
   };
 
-  const createTour = () => {
+  const createTour = async () => {
     if (tourLimitExceeded() === true) {
       return;
     }
     const tourID = crypto.randomUUID();
-    let newTour = {
-      id: tourID,
-      tourName: "Untitled Tour",
-      tourPreviewImg: "",
-      itemsData: [],
-    };
-    newTour.itemsData[0] = {
+    const tourName = "Untitle Tour";
+    const tourPreviewImg = "";
+    const itemsData = [];
+    itemsData[0] = {
       imgUrl: "",
       title: "",
       description: "",
       mediaType: "image",
       isVisible: true,
     };
+    let newTour = {
+      id: tourID,
+      tourName: tourName,
+      tourPreviewImg: tourPreviewImg,
+      itemsData: itemsData,
+    };
     if (
       user.username !== undefined &&
       user.username !== null &&
       user.username !== ""
     ) {
-      setTours([...tours, newTour]);
-      setCreatedTour(newTour);
+      const putTourRes = await putTour(
+        user.username,
+        tourID,
+        itemsData,
+        tourName,
+        tourPreviewImg
+      );
+      console.log(putTourRes.success);
+      if (putTourRes.success === "put call succeed!") {
+        setTours([...tours, newTour]);
+        setCreatedTour(newTour);
+      }
     }
   };
 
@@ -284,7 +297,7 @@ const HomePage = ({ user, signOut }) => {
           severity="warning"
           role="button"
           onClose={() => toggleToursExceededAlert()}
-          closeText="Doesn't Work!"
+          closeText="Close"
         >
           <AlertTitle>Cannot create tour</AlertTitle>
           you have reached the maximum limit of 10 tours

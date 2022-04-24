@@ -8,7 +8,7 @@ import TourEditorLayout from "../layouts/TourEditorLayout";
 import PresentView from "./PresentView";
 import { useParams } from "react-router-dom";
 import debounce from "lodash.debounce";
-import { getTour, putTour } from "../api/api";
+import { getTour, postTour } from "../api/api";
 
 const TourEditor = ({ user }) => {
   const theme = useTheme();
@@ -153,7 +153,7 @@ const TourEditor = ({ user }) => {
     debounceFn(items, tourName);
   }, [items, tourName, params.tourId]);
 
-  const handleDebounceFn = (itemsData, tourName) => {
+  const handleDebounceFn = async(itemsData, tourName) => {
     if (
       user.username !== undefined &&
       user.username !== null &&
@@ -163,7 +163,8 @@ const TourEditor = ({ user }) => {
       tourName
     ) {
       console.log(user.username)
-      putTour(user.username, tourID, itemsData, tourName);
+      const postTourRes = await postTour(user.username, tourID, itemsData, tourName);
+      console.log(postTourRes);
     }
     console.log(itemsData, tourName);
   };
