@@ -162,9 +162,9 @@ const TourEditor = ({ user }) => {
       itemsData &&
       tourName
     ) {
-      console.log(user.username)
+      // console.log(user.username)
       const postTourRes = await postTour(user.username, tourID, itemsData, tourName);
-      console.log(postTourRes);
+      // console.log(postTourRes);
     }
     console.log(itemsData, tourName);
   };

@@ -60,6 +60,8 @@ const convertUrlType = (param, type) => {
  ********************************/
 
 app.get(path + hashKeyPath, function(req, res) {
+  const skBeginsWith = req.query.skBeginsWith;
+
   const condition = {}
   condition[partitionKeyName] = {
     ComparisonOperator: 'EQ'
@@ -70,6 +72,18 @@ app.get(path + hashKeyPath, function(req, res) {
   } else {
     try {
       condition[partitionKeyName]['AttributeValueList'] = [ convertUrlType(req.params[partitionKeyName], partitionKeyType) ];
+    } catch(err) {
+      res.statusCode = 500;
+      res.json({error: 'Wrong column type ' + err});
+    }
+  }
+  if (skBeginsWith) {
+    condition[sortKeyName] = {
+      ComparisonOperator: 'BEGINS_WITH'
+    }
+
+    try {
+      condition[sortKeyName]['AttributeValueList'] = [ convertUrlType(skBeginsWith, partitionKeyType) ];
     } catch(err) {
       res.statusCode = 500;
       res.json({error: 'Wrong column type ' + err});
