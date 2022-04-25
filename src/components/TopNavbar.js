@@ -10,6 +10,7 @@ import {
   Dialog,
   Divider,
   Grid,
+  Icon,
   Menu,
   TextField,
   Typography,
@@ -20,14 +21,14 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import { useCallback, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import debounce from "lodash.debounce";
-import { API } from "aws-amplify";
+import AutosaveIndicator from "./AutosaveIndicator";
 
 export default function SearchAppBar({
   setPresentMode,
   tourName,
   setTourName,
   items,
+  saveState,
 }) {
   const theme = useTheme();
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -116,7 +117,7 @@ export default function SearchAppBar({
     <>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
-          position="static"
+          position="fixed"
           sx={{ backgroundColor: "white", color: "black" }}
         >
           <Toolbar sx={{ height: "64px" }}>
@@ -128,6 +129,7 @@ export default function SearchAppBar({
             >
               Home
             </Button>
+            <AutosaveIndicator saving={saveState} />
             <Box sx={{ flexGrow: 1 }} />
             <Box
               sx={{
@@ -234,6 +236,7 @@ export default function SearchAppBar({
             </Box>
           </Toolbar>
         </AppBar>
+        <Toolbar />
       </Box>
       <Dialog open={invalidItemsAlert} onClose={closeInvalidItemsAlert}>
         <Alert

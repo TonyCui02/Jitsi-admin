@@ -9,6 +9,7 @@ import PresentView from "./PresentView";
 import { useParams } from "react-router-dom";
 import debounce from "lodash.debounce";
 import { getTour, postTour } from "../api/api";
+import SavingState from "../components/SavingState";
 
 const TourEditor = ({ user }) => {
   const theme = useTheme();
@@ -23,6 +24,7 @@ const TourEditor = ({ user }) => {
   ]);
   const [presentMode, setPresentMode] = useState(false);
   const [tourName, setTourName] = useState("Untitled Tour");
+  const [saveState, setSaveState] = useState(SavingState.SAVED);
   let params = useParams();
   const tourID = params.tourId;
 
@@ -149,11 +151,7 @@ const TourEditor = ({ user }) => {
     // console.log(params.tourId);
   });
 
-  useEffect(() => {
-    debounceFn(items, tourName);
-  }, [items, tourName, params.tourId]);
-
-  const handleDebounceFn = async(itemsData, tourName) => {
+  const handleDebounceFn = async (itemsData, tourName) => {
     if (
       user.username !== undefined &&
       user.username !== null &&
@@ -164,13 +162,26 @@ const TourEditor = ({ user }) => {
     ) {
       // console.log(user.username)
       const tourPreviewImg = itemsData[0].imgUrl;
-      const postTourRes = await postTour(user.username, tourID, itemsData, tourName, tourPreviewImg);
+      setSaveState(SavingState.SAVING);
+      const postTourRes = await postTour(
+        user.username,
+        tourID,
+        itemsData,
+        tourName,
+        tourPreviewImg
+      );
+      setSaveState(SavingState.SAVED);
       // console.log(postTourRes);
     }
     console.log(itemsData, tourName);
   };
 
   const debounceFn = useCallback(debounce(handleDebounceFn, 1000), []);
+
+  useEffect(() => {
+    debounceFn(items, tourName);
+    setSaveState(SavingState.NOT_SAVED);
+  }, [items, tourName, params.tourId]);
 
   return (
     <TourEditorLayout>
@@ -193,6 +204,7 @@ const TourEditor = ({ user }) => {
             tourName={tourName}
             setTourName={setTourName}
             items={items}
+            saveState={saveState}
           />
           <Container maxWidth="md">
             <Grid sx={{ paddingTop: "48px" }} container>
