@@ -5,10 +5,13 @@ import { CardActionArea, Chip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/system";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { getPresignedUrl, pushFileToS3 } from "../api/api";
 import ImagePreview from "./ImagePreview";
+import Auth from "aws-amplify";
+import { userContext } from "../context/userContext";
+import { tourContext } from "../context/tourContext";
 
 const UploaderContainer = styled("div")(() => ({
   display: "flex",
@@ -80,6 +83,9 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
   const [imageUploaded, setImageUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
 
+  const user = useContext(userContext);
+  const tourID = useContext(tourContext);
+
   const handleImageDelete = () => {
     setImageUploaded(false);
     setFiles([]);
@@ -106,7 +112,11 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
       if (rejectedFiles.length > 0) {
         return;
       }
-      const presignedUrl = await getPresignedUrl(acceptedFiles[0]);
+      const presignedUrl = await getPresignedUrl(
+        acceptedFiles[0],
+        user.username,
+        tourID
+      );
       console.log(presignedUrl);
       if (presignedUrl) {
         const response = await pushFileToS3(presignedUrl, acceptedFiles[0]);

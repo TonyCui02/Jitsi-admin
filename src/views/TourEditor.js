@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import debounce from "lodash.debounce";
 import { getTour, postTour } from "../api/api";
 import SavingState from "../components/SavingState";
+import { tourContext } from "../context/tourContext";
 
 const TourEditor = ({ user }) => {
   const theme = useTheme();
@@ -184,71 +185,73 @@ const TourEditor = ({ user }) => {
   }, [items, tourName, params.tourId]);
 
   return (
-    <TourEditorLayout>
-      {presentMode ? (
-        <PresentView
-          setPresentMode={setPresentMode}
-          items={items}
-          updateItem={updateItem}
-        />
-      ) : (
-        <Box
-          sx={{
-            backgroundColor: theme.palette.grey[200],
-            height: "100%",
-            minHeight: "100vh",
-          }}
-        >
-          <TopNavbar
+    <tourContext.Provider value={tourID}>
+      <TourEditorLayout>
+        {presentMode ? (
+          <PresentView
             setPresentMode={setPresentMode}
-            tourName={tourName}
-            setTourName={setTourName}
             items={items}
-            saveState={saveState}
+            updateItem={updateItem}
           />
-          <Container maxWidth="md">
-            <Grid sx={{ paddingTop: "48px" }} container>
-              <Typography variant="h3">Edit tour</Typography>
-              {items.map((item, index) => (
-                <Grid item xs={12} key={index}>
-                  <MediaCardWrapper
-                    index={index}
-                    title={item.title}
-                    description={item.description}
-                    imgUrl={item.imgUrl}
-                    mediaType={item.mediaType}
-                    isVisible={item.isVisible}
-                    deleteItem={deleteItem}
-                    // // updateItem={updateItem}
-                    totalItems={items.length}
-                    // swapItems={swapItems}
-                    moveItemUp={moveItemUp}
-                    moveItemDown={moveItemDown}
-                    addItemAfter={addItemAfter}
-                    // updateItemDescription={updateItemDescription}
-                    // updateItemTitle={updateItemTitle}
-                    updateItem={updateItem}
-                    copyItem={copyItem}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-            <Box sx={{ padding: "32px 0px 84px 0px" }}>
-              <Button
-                startIcon={<AddIcon />}
-                fullWidth
-                variant="contained"
-                onClick={() => {
-                  addItem();
-                }}
-              >
-                Add Item
-              </Button>
-            </Box>
-          </Container>
-        </Box>
-      )}
-    </TourEditorLayout>
+        ) : (
+          <Box
+            sx={{
+              backgroundColor: theme.palette.grey[200],
+              height: "100%",
+              minHeight: "100vh",
+            }}
+          >
+            <TopNavbar
+              setPresentMode={setPresentMode}
+              tourName={tourName}
+              setTourName={setTourName}
+              items={items}
+              saveState={saveState}
+            />
+            <Container maxWidth="md">
+              <Grid sx={{ paddingTop: "48px" }} container>
+                <Typography variant="h3">Edit tour</Typography>
+                {items.map((item, index) => (
+                  <Grid item xs={12} key={index}>
+                    <MediaCardWrapper
+                      index={index}
+                      title={item.title}
+                      description={item.description}
+                      imgUrl={item.imgUrl}
+                      mediaType={item.mediaType}
+                      isVisible={item.isVisible}
+                      deleteItem={deleteItem}
+                      // // updateItem={updateItem}
+                      totalItems={items.length}
+                      // swapItems={swapItems}
+                      moveItemUp={moveItemUp}
+                      moveItemDown={moveItemDown}
+                      addItemAfter={addItemAfter}
+                      // updateItemDescription={updateItemDescription}
+                      // updateItemTitle={updateItemTitle}
+                      updateItem={updateItem}
+                      copyItem={copyItem}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+              <Box sx={{ padding: "32px 0px 84px 0px" }}>
+                <Button
+                  startIcon={<AddIcon />}
+                  fullWidth
+                  variant="contained"
+                  onClick={() => {
+                    addItem();
+                  }}
+                >
+                  Add Item
+                </Button>
+              </Box>
+            </Container>
+          </Box>
+        )}
+      </TourEditorLayout>
+    </tourContext.Provider>
   );
 };
 

@@ -1,13 +1,15 @@
 import axios from "axios";
 import { API } from "aws-amplify";
 
-async function getPresignedUrl(file) {
+async function getPresignedUrl(file, username, tourID) {
   try {
+    let filename = `user_${username}/tour_${tourID}/${file.name}`;
+    console.log(filename);
     const response = await axios.get(
       "https://r91ns3kje6.execute-api.ap-southeast-2.amazonaws.com/default/getPresignedUrl",
       {
         params: {
-          filename: file.name,
+          filename: filename,
           filetype: file.type,
         },
       }
