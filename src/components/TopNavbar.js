@@ -118,7 +118,7 @@ export default function SearchAppBar({
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
           position="fixed"
-          sx={{ backgroundColor: "white", color: "black" }}
+          sx={{ backgroundColor: "white", color: "black" , zIndex: 1}}
         >
           <Toolbar sx={{ height: "64px" }}>
             <Button
@@ -243,7 +243,7 @@ export default function SearchAppBar({
           severity="warning"
           role="button"
           onClose={() => closeInvalidItemsAlert()}
-          closeText="Doesn't Work!"
+          closeText="Close"
         >
           <AlertTitle>Invalid items</AlertTitle>
           {invalidText}

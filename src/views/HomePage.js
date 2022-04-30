@@ -95,7 +95,7 @@ const HomePage = ({ user, signOut }) => {
 
   const tourLimitExceeded = () => {
     const numTours = tours.length;
-    console.log(numTours);
+    // console.log(numTours);
     if (numTours >= 10) {
       toggleToursExceededAlert();
       return true;
@@ -257,12 +257,12 @@ const HomePage = ({ user, signOut }) => {
                 </ListItemIcon>
                 <ListItemText>New</ListItemText>
               </MenuItem>
-              <MenuItem onClick={closeCreateTourMenu}>
+              {/* <MenuItem onClick={closeCreateTourMenu}>
                 <ListItemIcon>
                   <ContentCopyIcon />
                 </ListItemIcon>
                 <ListItemText>Duplicate Existing</ListItemText>
-              </MenuItem>
+              </MenuItem> */}
             </Menu>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
