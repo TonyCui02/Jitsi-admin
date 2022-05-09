@@ -54,6 +54,13 @@ async function getUserTours(username) {
   return await API.get(apiName, path, params);
 }
 
+async function getUserProfile(username) {
+  const apiName = "toursApi";
+  const path = `/tours/object/user_${username}/profile_${username}`;
+
+  return await API.get(apiName, path);
+}
+
 async function putTour(username, tourID, itemsData, tourName, tourPreviewImg) {
   const apiName = "toursApi";
   const path = "/tours";
@@ -64,6 +71,20 @@ async function putTour(username, tourID, itemsData, tourName, tourPreviewImg) {
       tourData: itemsData,
       tourName: tourName,
       tourPreviewImg: tourPreviewImg,
+    },
+  };
+
+  return await API.put(apiName, path, myInit);
+}
+
+async function putProfile(username, domain_url) {
+  const apiName = "toursApi";
+  const path = "/tours";
+  const myInit = {
+    body: {
+      PK: "user_" + username,
+      SK: "profile_" + username,
+      domain_url: domain_url,
     },
   };
 
@@ -101,4 +122,6 @@ export {
   postTour,
   getUserTours,
   delTour,
+  getUserProfile,
+  putProfile,
 };

@@ -207,6 +207,7 @@ const TourEditor = ({ user }) => {
               setTourName={setTourName}
               items={items}
               saveState={saveState}
+              user={user}
             />
             <Container maxWidth="md">
               <Grid sx={{ paddingTop: "48px" }} container>

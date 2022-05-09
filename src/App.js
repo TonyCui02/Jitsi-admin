@@ -13,6 +13,7 @@ import SignUpPage from "./views/SignUpPage";
 import { withAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { userContext } from "./context/userContext";
+import AccountSettingsView from "./views/AccountSettingsView";
 
 const App = ({ signOut, user }) => {
   return (
@@ -21,7 +22,7 @@ const App = ({ signOut, user }) => {
         <BrowserRouter>
           <Routes>
             <Route
-              path="/"
+              path="/*"
               element={<HomePage user={user} signOut={signOut} />}
             />
             <Route path="/tours/:tourId" element={<TourEditor user={user} />} />

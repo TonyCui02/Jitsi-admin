@@ -19,8 +19,9 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { getUserProfile } from "../api/api";
 import AutosaveIndicator from "./AutosaveIndicator";
 
 export default function SearchAppBar({
@@ -29,6 +30,7 @@ export default function SearchAppBar({
   setTourName,
   items,
   saveState,
+  user,
 }) {
   const theme = useTheme();
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -36,6 +38,23 @@ export default function SearchAppBar({
   const [invalidItemsAlert, setInvalidItemsAlert] = useState(false);
   const [invalidText, setInvalidText] = useState("");
   const [copyText, setCopyText] = useState("Copy");
+  const [domainUrl, setDomainUrl] = useState("");
+
+  const fetchProfile = async () => {
+    try {
+      let profileRes = await getUserProfile(user.username);
+      // console.log(profileRes);
+      let domain_url = profileRes.domain_url;
+      // console.log(domain_url);
+      setDomainUrl(domain_url);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   const closeInvalidItemsAlert = () => {
     setInvalidItemsAlert(!invalidItemsAlert);
@@ -63,7 +82,7 @@ export default function SearchAppBar({
 
   const generateQueryString = (items) => {
     let randomID = crypto.randomUUID();
-    let url = `https://360-test1.envisage-ar.com/${randomID}?`;
+    let url = `https://${domainUrl}/${randomID}?`; // previous url: 360-test1.envisage-ar.com
     let queryStringArr = [];
     for (let i = 0; i < items.length; i++) {
       queryStringArr.push(
@@ -118,7 +137,7 @@ export default function SearchAppBar({
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
           position="fixed"
-          sx={{ backgroundColor: "white", color: "black" , zIndex: 1}}
+          sx={{ backgroundColor: "white", color: "black", zIndex: 1 }}
         >
           <Toolbar sx={{ height: "64px" }}>
             <Button

@@ -26,9 +26,23 @@ import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  useMatch,
+  useNavigate,
+  useParams,
+  useResolvedPath,
+  Link as RouterLink,
+  matchPath,
+} from "react-router-dom";
 import TourCard from "../components/TourCard";
 import { getUserTours, putTour, delTour } from "../api/api";
+import ToursView from "./ToursView";
+import AccountSettingsView from "./AccountSettingsView";
+
 const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -57,6 +71,20 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
+function useRouteMatch(patterns) {
+  const { pathname } = useLocation();
+
+  for (let i = 0; i < patterns.length; i += 1) {
+    const pattern = patterns[i];
+    const possibleMatch = matchPath(pattern, pathname);
+    if (possibleMatch !== null) {
+      return possibleMatch;
+    }
+  }
+
+  return null;
+}
+
 const HomePage = ({ user, signOut }) => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorElTour, setAnchorElTour] = useState(null);
@@ -68,10 +96,10 @@ const HomePage = ({ user, signOut }) => {
   const [createdTour, setCreatedTour] = useState(null);
   const [toursExceededAlert, setToursExceededAlert] = useState(false);
   let navigate = useNavigate();
-  let location = useLocation();
-  let params = useParams();
+  const routeMatch = useRouteMatch(["/settings", "/"]);
+  const currentTab = routeMatch?.pattern?.path;
 
-  // console.log(user);
+  console.log(currentTab);
 
   const openCreateTourMenu = (event) => {
     setAnchorElTour(event.currentTarget);
@@ -285,6 +313,16 @@ const HomePage = ({ user, signOut }) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <MenuItem
+                // component={RouterLink}
+                // to="/settings"
+                onClick={() => {
+                  handleCloseUserMenu();
+                  navigate("settings");
+                }}
+              >
+                <Typography textAlign="center">Account Settings</Typography>
+              </MenuItem>
               <MenuItem onClick={(() => handleCloseUserMenu, signOut)}>
                 <Typography textAlign="center">Sign Out</Typography>
               </MenuItem>
@@ -319,20 +357,34 @@ const HomePage = ({ user, signOut }) => {
         <Toolbar />
         <Box sx={{ overflow: "auto" }}>
           <List>
-            {["Home"].map((text, index) => (
-              <ListItem selected button key={text}>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
+            <ListItem
+              component={RouterLink}
+              selected={currentTab === "/"}
+              button
+              to="/"
+            >
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home" />
+            </ListItem>
+            <ListItem
+              component={RouterLink}
+              selected={currentTab === "/settings"}
+              button
+              to="settings"
+            >
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Account Settings" />
+            </ListItem>
           </List>
         </Box>
       </Drawer>
       <Main open={open} sx={{ height: "100vh" }}>
         <DrawerHeader />
-        <Grid container spacing={2}>
+        {/* <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography px="16px" variant="h3">
               Tours
@@ -348,8 +400,8 @@ const HomePage = ({ user, signOut }) => {
                     tourName={item.tourName}
                     tourPreviewImg={item.tourPreviewImg}
                     deleteTour={() => {
-                      deleteTour(item.id);
-                      deleteDbTour(user.username, item.id);
+                      //   deleteTour(item.id);
+                      //   deleteDbTour(user.username, item.id);
                     }}
                   />
                 ))
@@ -362,8 +414,27 @@ const HomePage = ({ user, signOut }) => {
                 </Box>
               )}
             </Box>
-          </Grid>
-        </Grid>
+          </Grid> */}
+        {/* </Grid> */}
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ToursView
+                tours={tours}
+                deleteTour={deleteTour}
+                deleteDbTour={deleteDbTour}
+                user={user}
+              />
+            }
+          ></Route>
+          <Route
+            path="settings"
+            element={<AccountSettingsView user={user} />}
+          />
+        </Routes>
+        <Outlet />
       </Main>
     </Box>
   );
