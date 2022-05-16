@@ -21,7 +21,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { getUserProfile } from "../api/api";
+import { getUserProfile, putProfile } from "../api/api";
 import AutosaveIndicator from "./AutosaveIndicator";
 
 export default function SearchAppBar({
@@ -42,11 +42,21 @@ export default function SearchAppBar({
 
   const fetchProfile = async () => {
     try {
+      const defaultDomain = "https://360-test1.envisage-ar.com";
       let profileRes = await getUserProfile(user.username);
       // console.log(profileRes);
       let domain_url = profileRes.domain_url;
       // console.log(domain_url);
-      setDomainUrl(domain_url);
+      if (
+        domain_url === undefined ||
+        domain_url === null ||
+        domain_url === ""
+      ) {
+        putProfile(user.username, defaultDomain);
+        setDomainUrl(defaultDomain);
+      } else {
+        setDomainUrl(domain_url);
+      }
     } catch (e) {
       console.log(e);
     }

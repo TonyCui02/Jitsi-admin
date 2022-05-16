@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box, styled } from "@mui/system";
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import UploaderBox from "./UploaderBox";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -22,6 +22,8 @@ const CardHelpers = styled(Box)(() => ({
   gap: "2px",
   padding: "6px 0px 6px 0px",
 }));
+
+const MAX_TITLE_LENGTH = 30;
 
 const MediaCardWrapper = memo(
   ({
@@ -40,6 +42,8 @@ const MediaCardWrapper = memo(
     copyItem,
   }) => {
     const myRef = useRef(null);
+    const [titleError, setTitleError] = useState(false);
+    const [titleErrorText, setTitleErrorText] = useState("");
 
     const executeScroll = (type) => {
       if (type === "down") {
@@ -55,7 +59,21 @@ const MediaCardWrapper = memo(
       }
     };
 
+    const validateTitle = (title) => {
+      if (title.length >= MAX_TITLE_LENGTH) {
+        setTitleError(true);
+        setTitleErrorText("Title cannot be more than 25 characters");
+      } else {
+        setTitleError(false);
+        setTitleErrorText("");
+      }
+    };
+
     const updateItemTitle = (index, title) => {
+      validateTitle(title);
+      if (titleError) {
+        return;
+      }
       const newItem = {
         title: title,
         description,
@@ -186,6 +204,8 @@ const MediaCardWrapper = memo(
                 autoComplete="off"
               >
                 <TextField
+                  error={titleError === true}
+                  helperText={titleError ? titleErrorText : null}
                   required
                   fullWidth
                   label="Title"

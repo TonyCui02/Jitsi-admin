@@ -13,7 +13,9 @@ import SignUpPage from "./views/SignUpPage";
 import { withAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { userContext } from "./context/userContext";
-import AccountSettingsView from "./views/AccountSettingsView";
+import Amplify from 'aws-amplify';
+import config from './aws-exports';
+Amplify.configure(config);
 
 const App = ({ signOut, user }) => {
   return (

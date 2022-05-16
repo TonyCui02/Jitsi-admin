@@ -42,6 +42,7 @@ import TourCard from "../components/TourCard";
 import { getUserTours, putTour, delTour } from "../api/api";
 import ToursView from "./ToursView";
 import AccountSettingsView from "./AccountSettingsView";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -323,7 +324,7 @@ const HomePage = ({ user, signOut }) => {
               >
                 <Typography textAlign="center">Account Settings</Typography>
               </MenuItem>
-              <MenuItem onClick={(() => handleCloseUserMenu, signOut)}>
+              <MenuItem onClick={signOut}>
                 <Typography textAlign="center">Sign Out</Typography>
               </MenuItem>
             </Menu>
@@ -375,7 +376,7 @@ const HomePage = ({ user, signOut }) => {
               to="settings"
             >
               <ListItemIcon>
-                <HomeIcon />
+                <AccountCircleIcon />
               </ListItemIcon>
               <ListItemText primary="Account Settings" />
             </ListItem>

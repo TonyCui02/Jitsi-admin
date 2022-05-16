@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Divider,
   Grid,
@@ -23,11 +24,21 @@ const AccountSettingsView = ({ user }) => {
 
   const fetchProfile = async () => {
     try {
+      const defaultDomain = "https://360-test1.envisage-ar.com";
       let profileRes = await getUserProfile(user.username);
       // console.log(profileRes);
       let domain_url = profileRes.domain_url;
       // console.log(domain_url);
-      setDomainUrl(domain_url);
+      if (
+        domain_url === undefined ||
+        domain_url === null ||
+        domain_url === ""
+      ) {
+        putProfile(user.username, defaultDomain);
+        setDomainUrl(defaultDomain);
+      } else {
+        setDomainUrl(domain_url);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -37,7 +48,7 @@ const AccountSettingsView = ({ user }) => {
     try {
       let putProfileRes = await putProfile(user.username, domainUrlInput);
       console.log(putProfileRes);
-      setDomainUrl(domainUrlInput)
+      setDomainUrl(domainUrlInput);
     } catch (e) {
       console.log(e);
     }
@@ -87,6 +98,7 @@ const AccountSettingsView = ({ user }) => {
                 display: "flex",
                 justifyContent: "space-between",
                 width: "100%",
+                marginY: "12px"
               }}
             >
               {!isEditingDomain ? (
@@ -96,11 +108,13 @@ const AccountSettingsView = ({ user }) => {
                   id="outlined-basic"
                   label="Domain url"
                   variant="outlined"
+                  size="small"
                   defaultValue={domainUrl}
                   onChange={handleChange}
+                  fullWidth
                 />
               )}
-              <Box>
+              <Box display="flex">
                 {isEditingDomain && (
                   <Button
                     sx={{ marginX: "6px" }}
@@ -127,6 +141,7 @@ const AccountSettingsView = ({ user }) => {
                 </Button>
               </Box>
             </Box>
+            <Alert variant="outlined" severity="info" sx={{width: "100%"}}>(eg. 360-test1.envisage-ar.com)</Alert>
           </ListItem>
           <Divider />
         </List>
