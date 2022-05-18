@@ -42,7 +42,7 @@ export default function SearchAppBar({
 
   const fetchProfile = async () => {
     try {
-      const defaultDomain = "https://360-test1.envisage-ar.com";
+      const defaultDomain = "360-test1.envisage-ar.com";
       let profileRes = await getUserProfile(user.username);
       // console.log(profileRes);
       let domain_url = profileRes.domain_url;

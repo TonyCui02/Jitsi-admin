@@ -133,11 +133,11 @@ const HomePage = ({ user, signOut }) => {
   };
 
   const createTour = async () => {
-    if (tourLimitExceeded() === true) {
-      return;
-    }
+    // if (tourLimitExceeded() === true) {
+    //   return;
+    // }
     const tourID = crypto.randomUUID();
-    const tourName = "Untitle Tour";
+    const tourName = "Untitled Tour";
     const tourPreviewImg = "";
     const itemsData = [];
     itemsData[0] = {
