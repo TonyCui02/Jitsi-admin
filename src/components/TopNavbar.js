@@ -147,7 +147,7 @@ export default function SearchAppBar({
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
           position="fixed"
-          sx={{ backgroundColor: "white", color: "black", zIndex: 1 }}
+          sx={{ backgroundColor: "white", color: "black", zIndex: 11 }}
         >
           <Toolbar sx={{ height: "64px" }}>
             <Button
