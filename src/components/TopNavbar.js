@@ -163,7 +163,7 @@ export default function SearchAppBar({
             <Box sx={{ flexGrow: 1 }} />
             <Box
               sx={{
-                display: { xs: "none", md: "flex" },
+                display: { md: "flex" },
                 gap: 1,
                 alignItems: "center",
               }}
@@ -254,15 +254,6 @@ export default function SearchAppBar({
                   </Grid>
                 </Grid>
               </Menu>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-haspopup="true"
-                color="inherit"
-              >
-                <KeyboardArrowDownIcon />
-              </IconButton>
             </Box>
           </Toolbar>
         </AppBar>

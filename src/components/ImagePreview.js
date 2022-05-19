@@ -31,11 +31,11 @@ const ImagePreview = ({ imgUrl, setPreviewVisible, mediaType }) => {
         >
           <CloseIcon fontSize="large" />
         </IconButton>
-        <Container>
+        <Container fixed sx={{height: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
           {mediaType === "image" ? (
             <Pannellum
               width="100%"
-              height="800px"
+              height="80%"
               maxHfov={150}
               image={imgUrl}
               autoLoad
@@ -71,7 +71,7 @@ const ImagePreview = ({ imgUrl, setPreviewVisible, mediaType }) => {
               autoplay={false}
               controls
               width="100%"
-              height="600px"
+              height="80%"
               hfov={120}
               maxHfov={120}
             >

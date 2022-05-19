@@ -21,7 +21,11 @@ const AutosaveIndicator = ({ saving }) => {
       break;
   }
   return (
-    <Box sx={{ display: "flex", alignItems: "center", mx: "32px" }}>
+    <Box sx={{ display: {
+      xs: "none",
+      md: "flex"
+      
+    }, alignItems: "center", mx: "32px" }}>
       {saving === SavingState.SAVED ? (
         <CloudDoneIcon color="primary" />
       ) : (
