@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@aws-amplify/ui-react": "^2.15.1",
+    "@aws-amplify/ui-react": "^2.18.1",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@fontsource/roboto": "^4.5.3",
@@ -12,7 +12,7 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "aws-amplify": "^4.3.19",
+    "aws-amplify": "^4.3.22",
     "axios": "^0.26.0",
     "lodash.debounce": "^4.0.8",
     "pannellum-react": "^1.2.4",

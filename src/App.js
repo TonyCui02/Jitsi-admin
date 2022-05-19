@@ -10,12 +10,9 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import LoginPage from "./views/LoginPage";
 import SignUpPage from "./views/SignUpPage";
-import { withAuthenticator } from "@aws-amplify/ui-react";
-import "@aws-amplify/ui-react/styles.css";
 import { userContext } from "./context/userContext";
-import Amplify from 'aws-amplify';
-import config from './aws-exports';
-Amplify.configure(config);
+
+import { withAuthenticator } from "@aws-amplify/ui-react";
 
 const App = ({ signOut, user }) => {
   return (

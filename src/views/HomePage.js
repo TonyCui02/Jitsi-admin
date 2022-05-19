@@ -44,6 +44,7 @@ import ToursView from "./ToursView";
 import AccountSettingsView from "./AccountSettingsView";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { v4 as uuidv4 } from 'uuid';
+import { Auth } from 'aws-amplify'
 
 const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -325,7 +326,7 @@ const HomePage = ({ user, signOut }) => {
               >
                 <Typography textAlign="center">Account Settings</Typography>
               </MenuItem>
-              <MenuItem onClick={signOut}>
+              <MenuItem onClick={() => Auth.signOut()}>
                 <Typography textAlign="center">Sign Out</Typography>
               </MenuItem>
             </Menu>
