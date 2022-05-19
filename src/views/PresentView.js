@@ -34,6 +34,7 @@ const PresentView = ({ setPresentMode, items, updateItem }) => {
             width: `calc(100% - ${drawerWidth}px)`,
             display: "flex",
             flexDirection: "column",
+            height: "100vh"
           }}
         >
           <PresentNav setPresentMode={setPresentMode} />
