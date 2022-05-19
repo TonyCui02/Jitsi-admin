@@ -12,7 +12,7 @@ const Overlay = styled("div")(({ theme }) => ({
   position: "fixed",
   height: "100vh",
   width: "100%",
-  zIndex: "10",
+  zIndex: "12",
   left: "0",
   top: "0",
   backgroundColor: theme.palette.grey[900],

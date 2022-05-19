@@ -23,6 +23,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { getUserProfile, putProfile } from "../api/api";
 import AutosaveIndicator from "./AutosaveIndicator";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function SearchAppBar({
   setPresentMode,
@@ -91,7 +92,7 @@ export default function SearchAppBar({
   };
 
   const generateQueryString = (items) => {
-    let randomID = crypto.randomUUID();
+    let randomID = uuidv4();
     let url = `https://${domainUrl}/${randomID}?`; // previous url: 360-test1.envisage-ar.com
     let queryStringArr = [];
     for (let i = 0; i < items.length; i++) {

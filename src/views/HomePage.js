@@ -43,6 +43,7 @@ import { getUserTours, putTour, delTour } from "../api/api";
 import ToursView from "./ToursView";
 import AccountSettingsView from "./AccountSettingsView";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { v4 as uuidv4 } from 'uuid';
 
 const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -136,7 +137,7 @@ const HomePage = ({ user, signOut }) => {
     // if (tourLimitExceeded() === true) {
     //   return;
     // }
-    const tourID = crypto.randomUUID();
+    const tourID = uuidv4();
     const tourName = "Untitled Tour";
     const tourPreviewImg = "";
     const itemsData = [];
