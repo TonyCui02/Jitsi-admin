@@ -137,7 +137,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
     [index, updateItemImage]
   );
 
-  const maxFileSize = 20000000;
+  const maxFileSize = 500000000;
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     onDrop,
@@ -227,7 +227,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
               </Typography>
               {isFileTooLarge && (
                 <Typography variant="subtitle1" color="error.main">
-                  File exceeds maximum size of 20MB.
+                  File exceeds maximum size of 500MB.
                 </Typography>
               )}
             </Box>
