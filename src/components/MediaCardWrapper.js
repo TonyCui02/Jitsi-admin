@@ -49,13 +49,13 @@ const MediaCardWrapper = memo(
       if (type === "down") {
         window.scrollTo({
           behavior: "smooth",
-          top: myRef.current.offsetTop + 580,
+          top: myRef.current.offsetTop + 100,
         });
       } else {
         window.scrollTo({
           behavior: "smooth",
           top: myRef.current.offsetTop - 580,
-        });
+        }); 
       }
     };
 

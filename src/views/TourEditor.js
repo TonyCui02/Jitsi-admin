@@ -11,18 +11,14 @@ import debounce from "lodash.debounce";
 import { getTour, postTour } from "../api/api";
 import SavingState from "../components/SavingState";
 import { tourContext } from "../context/tourContext";
+import Loading from "./Loading";
+import Error from "./Error";
 
 const TourEditor = ({ user }) => {
   const theme = useTheme();
-  const [items, setItems] = useState([
-    {
-      imgUrl: "",
-      title: "",
-      description: "",
-      mediaType: "image",
-      isVisible: true,
-    },
-  ]);
+  const [items, setItems] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [presentMode, setPresentMode] = useState(false);
   const [tourName, setTourName] = useState("Untitled Tour");
   const [saveState, setSaveState] = useState(SavingState.SAVED);
@@ -95,58 +91,28 @@ const TourEditor = ({ user }) => {
   }, []); // No dependencies
 
   const fetchItems = async () => {
-    const tourDataRes = await getTour(user.username, tourID);
-    console.log(tourDataRes);
-    if (tourDataRes["tourData"]) {
-      setItems(tourDataRes["tourData"]);
-    }
-    if (tourDataRes["tourName"]) {
-      setTourName(tourDataRes["tourName"]);
+    try {
+      const tourDataRes = await getTour(user.username, tourID);
+      console.log(tourDataRes);
+      if (tourDataRes["tourData"]) {
+        setItems(tourDataRes["tourData"]);
+      }
+      if (tourDataRes["tourName"]) {
+        setTourName(tourDataRes["tourName"]);
+      }
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+      setItems(null);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     console.log("mount");
-    // if (localStorage.getItem("tours")) {
-    //   console.log("searching tours...");
-    //   const tours = JSON.parse(localStorage.getItem("tours"));
-    //   let tour = tours.find((o) => o.id === params.tourId);
-    //   console.log("found tour: " + tour.id);
-    //   let tourName = tour.tourName;
-    //   setTourName(tourName);
-    //   setItems(tour.itemsData);
-    // }
     fetchItems();
   }, []);
-
-  // useEffect(() => {
-  //   if (localStorage.getItem("tours")) {
-  //     console.log("searching tours...");
-  //     let tours = JSON.parse(localStorage.getItem("tours"));
-  //     let tour = tours.find((o, i) => {
-  //       if (o.id === params.tourId) {
-  //         tours[i].itemsData = items;
-  //         return true; // stop searching
-  //       }
-  //     });
-  //     tour.tourPreviewImg = items[0].imgUrl;
-  //     console.log("found tour: " + tour.id);
-  //     localStorage.setItem("tours", JSON.stringify(tours));
-  //     debounceFn(items);
-  //   }
-  // }, [items, params.tourId]);
-
-  // useEffect(() => {
-  //   if (localStorage.getItem("tours")) {
-  //     // console.log("searching tours...");
-  //     let tours = JSON.parse(localStorage.getItem("tours"));
-  //     let tour = tours.find((o) => o.id === params.tourId);
-  //     // console.log("found tour: " + tour.id);
-  //     tour.tourName = tourName;
-  //     localStorage.setItem("tours", JSON.stringify(tours));
-  //     debounceFn(tourName);
-  //   }
-  // }, [params.tourId, tourName]);
 
   useEffect(() => {
     // console.log(params.tourId);
@@ -159,19 +125,24 @@ const TourEditor = ({ user }) => {
       user.username !== "" &&
       tourID &&
       itemsData &&
-      tourName
+      !error
     ) {
       // console.log(user.username)
       const tourPreviewImg = itemsData[0].imgUrl;
       setSaveState(SavingState.SAVING);
-      const postTourRes = await postTour(
-        user.username,
-        tourID,
-        itemsData,
-        tourName,
-        tourPreviewImg
-      );
-      setSaveState(SavingState.SAVED);
+      try {
+        const postTourRes = await postTour(
+          user.username,
+          tourID,
+          itemsData,
+          tourName,
+          tourPreviewImg
+        );
+        setSaveState(SavingState.SAVED);
+        console.log("post call issued to tour");
+      } catch (err) {
+        console.log(err);
+      }
       // console.log(postTourRes);
     }
     console.log(itemsData, tourName);
@@ -182,8 +153,10 @@ const TourEditor = ({ user }) => {
   useEffect(() => {
     debounceFn(items, tourName);
     setSaveState(SavingState.NOT_SAVED);
-  }, [items, tourName, params.tourId]);
+  }, [items, tourName, params.tourId, debounceFn]);
 
+  if (loading) return <Loading />;
+  if (error || items === null) return <Error />;
   return (
     <tourContext.Provider value={tourID}>
       <TourEditorLayout>
