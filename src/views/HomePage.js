@@ -42,9 +42,11 @@ import TourCard from "../components/TourCard";
 import { getUserTours, putTour, delTour } from "../api/api";
 import ToursView from "./ToursView";
 import AccountSettingsView from "./AccountSettingsView";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { v4 as uuidv4 } from 'uuid';
-import { Auth } from 'aws-amplify'
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { v4 as uuidv4 } from "uuid";
+import { Auth } from "aws-amplify";
+import LoadingPage from "./LoadingPage";
+import ErrorPage from "./ErrorPage";
 
 const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -95,9 +97,11 @@ const HomePage = ({ user, signOut }) => {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  const [tours, setTours] = useState([]);
+  const [tours, setTours] = useState(null);
   const [createdTour, setCreatedTour] = useState(null);
   const [toursExceededAlert, setToursExceededAlert] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   let navigate = useNavigate();
   const routeMatch = useRouteMatch(["/settings", "/"]);
   const currentTab = routeMatch?.pattern?.path;
@@ -185,17 +189,25 @@ const HomePage = ({ user, signOut }) => {
   };
 
   const fetchUserTours = async () => {
-    const userToursRes = await getUserTours(user.username);
-    let fetchedTourData = userToursRes.map((item) => ({
-      id: item.SK.replace("tour_", ""),
-      tourName: item.tourName,
-      tourPreviewImg: item.tourPreviewImg || "",
-      itemsData: item.tourData || null,
-    }));
-    console.log(userToursRes);
-    console.log(fetchedTourData);
-    setTours(fetchedTourData);
+    try {
+      const userToursRes = await getUserTours(user.username);
+      let fetchedTourData = userToursRes.map((item) => ({
+        id: item.SK.replace("tour_", ""),
+        tourName: item.tourName,
+        tourPreviewImg: item.tourPreviewImg || "",
+        itemsData: item.tourData || null,
+      }));
+      console.log(userToursRes);
+      console.log(fetchedTourData);
+      setTours(fetchedTourData);
+    } catch (err) {
+      console.error(err.message);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
   useEffect(() => {
     console.log("mount");
     // if (localStorage.getItem("tours")) {
@@ -214,6 +226,10 @@ const HomePage = ({ user, signOut }) => {
       navigate(`/tours/${createdTour.id}`);
     }
   }, [createdTour, navigate]);
+
+  if (loading) return <LoadingPage />;
+  if (error || tours === null) return <ErrorPage />;
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
