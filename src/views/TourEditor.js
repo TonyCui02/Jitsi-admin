@@ -11,8 +11,8 @@ import debounce from "lodash.debounce";
 import { getTour, postTour } from "../api/api";
 import SavingState from "../components/SavingState";
 import { tourContext } from "../context/tourContext";
-import Loading from "./Loading";
-import Error from "./Error";
+import LoadingPage from "./LoadingPage";
+import ErrorPage from "./ErrorPage";
 
 const TourEditor = ({ user }) => {
   const theme = useTheme();
@@ -155,8 +155,8 @@ const TourEditor = ({ user }) => {
     setSaveState(SavingState.NOT_SAVED);
   }, [items, tourName, params.tourId, debounceFn]);
 
-  if (loading) return <Loading />;
-  if (error || items === null) return <Error />;
+  if (loading) return <LoadingPage />;
+  if (error || items === null) return <ErrorPage />;
   return (
     <tourContext.Provider value={tourID}>
       <TourEditorLayout>
