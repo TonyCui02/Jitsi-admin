@@ -114,6 +114,30 @@ async function delTour(username, tourID) {
   return await API.del(apiName, path);
 }
 
+async function shortenUrl(url) {
+  let cuttlyApiKey = process.env.REACT_APP_PROD_CUTTLY_KEY;
+  try {
+    const res = await axios.get(
+      `http://cutt.ly/api/api.php?key=${cuttlyApiKey}&short=${url}`
+    );
+    console.log(res);
+    let data = res.data;
+    let status = data?.url?.status;
+    let shortLink;
+    if (status === 7) {
+      shortLink = data?.url?.shortLink;
+      // console.log(shortLink)
+      return shortLink;
+    } else {
+      console.error("error fetching from cuttly API");
+      return "";
+    }
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 export {
   getPresignedUrl,
   pushFileToS3,
@@ -124,4 +148,5 @@ export {
   delTour,
   getUserProfile,
   putProfile,
+  shortenUrl,
 };

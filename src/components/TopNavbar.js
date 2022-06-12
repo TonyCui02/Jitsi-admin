@@ -7,23 +7,24 @@ import {
   Alert,
   AlertTitle,
   Button,
+  CircularProgress,
   Dialog,
   Divider,
   Grid,
   Icon,
   Menu,
+  Skeleton,
   TextField,
   Typography,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import { useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { getUserProfile, putProfile } from "../api/api";
+import { getUserProfile, putProfile, shortenUrl } from "../api/api";
 import AutosaveIndicator from "./AutosaveIndicator";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export default function SearchAppBar({
   setPresentMode,
@@ -40,6 +41,7 @@ export default function SearchAppBar({
   const [invalidText, setInvalidText] = useState("");
   const [copyText, setCopyText] = useState("Copy");
   const [domainUrl, setDomainUrl] = useState("");
+  const [loadingUrl, setLoadingUrl] = useState(true);
 
   const fetchProfile = async () => {
     try {
@@ -71,26 +73,6 @@ export default function SearchAppBar({
     setInvalidItemsAlert(!invalidItemsAlert);
   };
 
-  const handlePublish = (event) => {
-    const visibleItems = items.filter((item) => item.isVisible === true);
-    if (!validateItems(visibleItems)) {
-      setInvalidItemsAlert(true);
-    } else {
-      setQueryString(generateQueryString(visibleItems));
-      setAnchorElUser(event.currentTarget);
-    }
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-    setCopyText("copy");
-  };
-
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(queryString);
-    setCopyText("Copied");
-  };
-
   const generateQueryString = (items) => {
     let randomID = uuidv4();
     let url = `https://${domainUrl}/${randomID}?`; // previous url: 360-test1.envisage-ar.com
@@ -106,6 +88,46 @@ export default function SearchAppBar({
     let queryString = queryStringArr.join("&");
 
     return url + queryString;
+  };
+
+  const getShortenedUrl = async (link) => {
+    let encodedLink = encodeURIComponent(link)
+    let shortLink = await shortenUrl(encodedLink);
+    return shortLink;
+  };
+
+  const handlePublish = async (event) => {
+    const visibleItems = items.filter((item) => item.isVisible === true);
+    if (!validateItems(visibleItems)) {
+      setInvalidItemsAlert(true);
+    } else {
+      setAnchorElUser(event.currentTarget);
+      let queryStringRes = generateQueryString(visibleItems);
+      // setQueryString(queryStringRes);
+      const shortLink = await getShortenedUrl(
+        // queryStringRes.substring(0, queryStringRes.indexOf("?"))
+        queryStringRes
+      );
+      console.log(queryStringRes);
+      console.log(shortLink);
+      if (shortLink === null || shortLink === "") {
+        alert("Error fetching shortened url from cuttly");
+        console.log("Error fetching shortened url from cuttly");
+      }
+      setQueryString(shortLink || "");
+      setLoadingUrl(false);
+    }
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+    setCopyText("copy");
+    setLoadingUrl(true);
+  };
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(queryString);
+    setCopyText("Copied");
   };
 
   const validateItems = (items) => {
@@ -215,42 +237,56 @@ export default function SearchAppBar({
                   sx={{ width: "400px", py: "16px", px: "16px" }}
                 >
                   <Grid item xs={12}>
-                    <Typography gutterBottom variant="subtitle1">
-                      Generated link
-                    </Typography>
+                    {loadingUrl ? (
+                      <Skeleton />
+                    ) : (
+                      <Typography gutterBottom variant="subtitle1">
+                        Generated link
+                      </Typography>
+                    )}
                   </Grid>
                   <Divider sx={{ width: "100%" }} />
                   <Grid item xs={12}>
-                    <Typography variant="body2">
-                      Paste the link into your browser to start a new meeting in
-                      Jitsi
-                      <br></br>
-                      <strong>
-                        (Your notes will not be uploaded to Jitsi)
-                      </strong>
-                    </Typography>
+                    {loadingUrl ? (
+                      <Skeleton />
+                    ) : (
+                      <Typography variant="body2">
+                        Paste the link into your browser to start a new meeting
+                        in Jitsi
+                        <br></br>
+                        <strong>
+                          (Your notes will not be uploaded to Jitsi)
+                        </strong>
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item xs={9}>
-                    <TextField
-                      fullWidth
-                      hiddenLabel
-                      size="small"
-                      id="outlined-read-only-input"
-                      // label="Read Only"
-                      value={queryString}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
+                    {loadingUrl ? (
+                      <Skeleton />
+                    ) : (
+                      <TextField
+                        fullWidth
+                        hiddenLabel
+                        size="small"
+                        id="outlined-read-only-input"
+                        // label="Read Only"
+                        value={queryString}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    )}
                   </Grid>
                   <Grid item sx={{ display: "flex" }} xs={3}>
-                    <Button
-                      fullWidth
-                      variant="outlined"
-                      onClick={() => handleCopyClick()}
-                    >
-                      {copyText}
-                    </Button>
+                    {loadingUrl ? null : (
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={() => handleCopyClick()}
+                      >
+                        {copyText}
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Menu>
