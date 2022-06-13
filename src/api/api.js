@@ -118,7 +118,7 @@ async function shortenUrl(url) {
   let cuttlyApiKey = process.env.REACT_APP_PROD_CUTTLY_KEY;
   try {
     const res = await axios.get(
-      `http://cutt.ly/api/api.php?key=${cuttlyApiKey}&short=${url}`
+      `https://cutt.ly/api/api.php?key=${cuttlyApiKey}&short=${url}`
     );
     console.log(res);
     let data = res.data;
