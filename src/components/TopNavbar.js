@@ -91,8 +91,8 @@ export default function SearchAppBar({
   };
 
   const getShortenedUrl = async (link) => {
-    // let encodedLink = encodeURIComponent(link)
-    let shortLink = await shortenUrl(link);
+    let encodedLink = encodeURIComponent(link);
+    let shortLink = await shortenUrl(encodedLink);
     return shortLink;
   };
 
@@ -108,8 +108,6 @@ export default function SearchAppBar({
         // queryStringRes.substring(0, queryStringRes.indexOf("?"))
         queryStringRes
       );
-      // console.log(queryStringRes);
-      // console.log(shortLink);
       if (shortLink === null || shortLink === "") {
         alert("Error fetching shortened url from bitly");
         console.log("Error fetching shortened url from bitly");

@@ -115,23 +115,26 @@ async function delTour(username, tourID) {
 }
 
 async function shortenUrl(url) {
-  let bittlyApiKey = process.env.REACT_APP_PROD_BITLY_API_KEY;
-  let requestUrl = `https://api-ssl.bitly.com/v4/shorten`;
+  console.log("Received url for shortening: " + url);
+  const endpoint =
+    `https://1o13z2dby3.execute-api.ap-southeast-2.amazonaws.com/default/shortenUrl?url=` +
+    encodeURIComponent(url);
+
   try {
-    let body = {
-      long_url: url,
-    };
-    let config = {
-      headers: {
-        Authorization: "Bearer " + bittlyApiKey,
-        "Content-Type": "application/json",
-      },
-    };
-    const res = await axios.post(requestUrl, body, config);
-    const data = res.data;
-    return data.link;
-  } catch (err) {
-    console.error(err);
+    const urlResponse = await axios.get(endpoint);
+
+    const data = urlResponse.data;
+
+    console.log("Received data from url shortening lambda: ");
+    console.log(data);
+
+    if (data.status === 200 && data?.response?.url?.status === 7) {
+      return data?.response?.url?.shortLink;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error occured due to: " + error);
     return null;
   }
 }
