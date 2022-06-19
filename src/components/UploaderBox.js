@@ -114,7 +114,6 @@ const UploaderBox = ({
         )
       );
 
-      console.log(acceptedFiles[0]);
       if (rejectedFiles.length > 0) {
         return;
       }
@@ -125,11 +124,12 @@ const UploaderBox = ({
       );
       console.log(presignedUrl);
       if (presignedUrl) {
+        // console.log(acceptedFiles[0].size);
         const response = await pushFileToS3(presignedUrl, acceptedFiles[0]);
         console.log(response);
         const url = response.config.url;
         const imgUrl = url.split("?", 1)[0];
-        console.log(imgUrl);
+        console.log("url of uploaded image: " + imgUrl);
 
         setImageUploaded(true);
 
