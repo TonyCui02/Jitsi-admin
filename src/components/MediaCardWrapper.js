@@ -31,6 +31,7 @@ const MediaCardWrapper = memo(
     description,
     imgUrl,
     mediaType,
+    fileSize,
     isVisible,
     index,
     deleteItem,
@@ -79,6 +80,7 @@ const MediaCardWrapper = memo(
         description,
         imgUrl,
         mediaType,
+        fileSize,
         isVisible,
       };
       updateItem(index, newItem);
@@ -90,17 +92,19 @@ const MediaCardWrapper = memo(
         description: description,
         imgUrl,
         mediaType,
+        fileSize,
         isVisible,
       };
       updateItem(index, newItem);
     };
 
-    const updateItemImage = (index, imgUrl, mediaType) => {
+    const updateItemImage = (index, imgUrl, mediaType, fileSize) => {
       const newItem = {
         title,
         description,
         imgUrl: imgUrl,
         mediaType: mediaType,
+        fileSize: fileSize,
         isVisible,
       };
       updateItem(index, newItem);
@@ -112,6 +116,7 @@ const MediaCardWrapper = memo(
         description,
         imgUrl,
         mediaType,
+        fileSize,
         isVisible: isVisible,
       };
       updateItem(index, newItem);
@@ -192,6 +197,7 @@ const MediaCardWrapper = memo(
             updateItemImage={updateItemImage}
             imgUrl={imgUrl}
             mediaType={mediaType}
+            fileSize={fileSize}
           />
           <Box sx={{ display: "flex", flexDirection: "column", flex: "1" }}>
             <CardContent sx={{ display: "flex", flexDirection: "column" }}>

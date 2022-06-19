@@ -193,6 +193,7 @@ const TourEditor = ({ user }) => {
                       description={item.description}
                       imgUrl={item.imgUrl}
                       mediaType={item.mediaType}
+                      fileSize={item.fileSize}
                       isVisible={item.isVisible}
                       deleteItem={deleteItem}
                       // // updateItem={updateItem}

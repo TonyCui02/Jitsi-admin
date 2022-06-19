@@ -9,9 +9,9 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { getPresignedUrl, pushFileToS3 } from "../api/api";
 import ImagePreview from "./ImagePreview";
-import Auth from "aws-amplify";
 import { userContext } from "../context/userContext";
 import { tourContext } from "../context/tourContext";
+import filesizeJS from "filesize.js";
 
 const UploaderContainer = styled("div")(() => ({
   display: "flex",
@@ -76,7 +76,13 @@ const MediaTypeChip = styled(Chip)(({ theme }) => ({
   width: "auto",
 }));
 
-const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
+const UploaderBox = ({
+  index,
+  updateItemImage,
+  imgUrl,
+  mediaType,
+  fileSize,
+}) => {
   const theme = useTheme();
   const [files, setFiles] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -89,7 +95,7 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
   const handleImageDelete = () => {
     setImageUploaded(false);
     setFiles([]);
-    updateItemImage(index, "", "image");
+    updateItemImage(index, "", "image", null);
   };
 
   const handleImagePreview = () => {
@@ -128,9 +134,9 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
         setImageUploaded(true);
 
         if (acceptedFiles[0].type.match("video.*")) {
-          updateItemImage(index, imgUrl, "video");
+          updateItemImage(index, imgUrl, "video", acceptedFiles[0].size);
         } else {
-          updateItemImage(index, imgUrl, "image");
+          updateItemImage(index, imgUrl, "image", acceptedFiles[0].size);
         }
       }
     },
@@ -171,12 +177,18 @@ const UploaderBox = ({ index, updateItemImage, imgUrl, mediaType }) => {
               />
             )}
           </ImageContainer>
-          <Box py="6px">
+          <Box py="6px" display="flex" alignItems="center">
             <MediaTypeChip
+              sx={{ mx: "6px" }}
               label={mediaType === "image" ? "Image" : "Video"}
               color="primary"
               variant="outlined"
             />
+            {fileSize && (
+              <Typography variant="subtitle2" color="text.secondary">
+                {filesizeJS(fileSize)}
+              </Typography>
+            )}
           </Box>
         </UploaderContainer>
       ) : (
