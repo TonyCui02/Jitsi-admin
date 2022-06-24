@@ -21,6 +21,12 @@
           "deploymentBucketName": "amplify-jitsiadmin-main-221525-deployment",
           "s3Key": "amplify-builds/toursFunction-2f654e6567424c306646-build.zip"
         }
+      },
+      "storage": {
+        "jitsiadmine8f945d7": {
+          "bucketName": "jitsi360-images",
+          "region": "ap-southeast-2"
+        }
       }
     }
   }

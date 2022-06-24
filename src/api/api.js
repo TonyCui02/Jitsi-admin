@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API } from "aws-amplify";
+import { API, Storage } from "aws-amplify";
 
 async function getPresignedUrl(file, username, tourID) {
   try {
@@ -111,7 +111,27 @@ async function delTour(username, tourID) {
   const apiName = "toursApi";
   const path = `/tours/object/user_${username}/tour_${tourID}`;
 
-  return await API.del(apiName, path);
+  let apiDelResponse = {};
+
+  try {
+    apiDelResponse = await API.del(apiName, path);
+    console.log(apiDelResponse);
+
+    const items = await Storage.list(`user_${username}/tour_${tourID}`);
+    console.log(items);
+    items.forEach((item) => {
+      try {
+        Storage.remove(item.key);
+        console.log("Successfully removed item: " + item.key);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+
+  return apiDelResponse;
 }
 
 async function shortenUrl(url) {

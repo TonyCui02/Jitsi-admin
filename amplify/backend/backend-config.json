@@ -31,6 +31,12 @@
     "toursDb": {
       "service": "DynamoDB",
       "providerPlugin": "awscloudformation"
+    },
+    "jitsiadmine8f945d7": {
+      "service": "S3",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
     }
   },
   "function": {

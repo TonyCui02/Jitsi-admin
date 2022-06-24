@@ -111,6 +111,7 @@ const TourEditor = ({ user }) => {
 
   useEffect(() => {
     console.log("mount");
+
     fetchItems();
   }, []);
 
