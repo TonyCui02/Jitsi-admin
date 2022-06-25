@@ -21,10 +21,12 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { useCallback, useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import { getUserProfile, putProfile, shortenUrl } from "../api/api";
+import { Link as RouterLink, useParams } from "react-router-dom";
+import { getUserProfile, listFiles, putProfile, shortenUrl } from "../api/api";
 import AutosaveIndicator from "./AutosaveIndicator";
 import { v4 as uuidv4 } from "uuid";
+import filesizeJS from "filesize.js";
+import { Storage } from "aws-amplify";
 
 export default function SearchAppBar({
   setPresentMode,
@@ -34,7 +36,7 @@ export default function SearchAppBar({
   saveState,
   user,
 }) {
-  const theme = useTheme();
+  const [anchorElFile, setAnchorElFile] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [queryString, setQueryString] = useState("");
   const [invalidItemsAlert, setInvalidItemsAlert] = useState(false);
@@ -42,32 +44,51 @@ export default function SearchAppBar({
   const [copyText, setCopyText] = useState("Copy");
   const [domainUrl, setDomainUrl] = useState("");
   const [loadingUrl, setLoadingUrl] = useState(true);
-
-  const fetchProfile = async () => {
-    try {
-      const defaultDomain = "360-test1.envisage-ar.com";
-      let profileRes = await getUserProfile(user.username);
-      // console.log(profileRes);
-      let domain_url = profileRes.domain_url;
-      // console.log(domain_url);
-      if (
-        domain_url === undefined ||
-        domain_url === null ||
-        domain_url === ""
-      ) {
-        putProfile(user.username, defaultDomain);
-        setDomainUrl(defaultDomain);
-      } else {
-        setDomainUrl(domain_url);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const [totalSize, setTotalSize] = useState(0);
+  let params = useParams();
+  const tourID = params.tourId;
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const defaultDomain = "360-test1.envisage-ar.com";
+        let profileRes = await getUserProfile(user.username);
+        // console.log(profileRes);
+        let domain_url = profileRes.domain_url;
+        // console.log(domain_url);
+        if (
+          domain_url === undefined ||
+          domain_url === null ||
+          domain_url === ""
+        ) {
+          putProfile(user.username, defaultDomain);
+          setDomainUrl(defaultDomain);
+        } else {
+          setDomainUrl(domain_url);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
     fetchProfile();
-  }, []);
+  }, [user.username]);
+
+  useEffect(() => {
+    let fileSize = 0;
+    const removeDuplicates = items.filter(
+      (v, i, a) => a.findIndex((v2) => v2.imgUrl === v.imgUrl) === i
+    );
+
+    const calcTotalSize = () => {
+      removeDuplicates.forEach((item) => {
+        fileSize += item.fileSize;
+        console.log(item);
+      });
+      setTotalSize(fileSize);
+    };
+
+    calcTotalSize();
+  }, [items]);
 
   const closeInvalidItemsAlert = () => {
     setInvalidItemsAlert(!invalidItemsAlert);
@@ -123,6 +144,14 @@ export default function SearchAppBar({
     setLoadingUrl(true);
   };
 
+  const handleOpenFileMenu = (event) => {
+    setAnchorElFile(event.currentTarget);
+  };
+
+  const handleCloseFileMenu = () => {
+    setAnchorElFile(null);
+  };
+
   const handleCopyClick = () => {
     navigator.clipboard.writeText(queryString);
     setCopyText("Copied");
@@ -167,7 +196,7 @@ export default function SearchAppBar({
     <>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
-          position="static"
+          position="fixed"
           sx={{ backgroundColor: "white", color: "black", zIndex: 11 }}
         >
           <Toolbar sx={{ height: "64px" }}>
@@ -176,9 +205,43 @@ export default function SearchAppBar({
               to="/"
               size="large"
               startIcon={<ArrowBackIosIcon />}
+              sx={{ marginRight: "16px" }}
             >
               Home
             </Button>
+            <Button onClick={handleOpenFileMenu} size="large">
+              File
+            </Button>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-file"
+              anchorEl={anchorElFile}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              keepMounted
+              open={Boolean(anchorElFile)}
+              onClose={handleCloseFileMenu}
+            >
+              <Grid
+                container
+                spacing={2}
+                sx={{ width: "400px", py: "16px", px: "16px" }}
+              >
+                <Grid item xs={12}>
+                  <Typography gutterBottom variant="h6">
+                    {tourName || ""}
+                  </Typography>
+                </Grid>
+                <Divider sx={{ width: "100%" }} />
+                <Grid item xs={12}>
+                  <Typography variant="body1">{`Total Size: ${filesizeJS(
+                    totalSize
+                  )}`}</Typography>
+                </Grid>
+              </Grid>
+            </Menu>
             <AutosaveIndicator saving={saveState} />
             <Box sx={{ flexGrow: 1 }} />
             <Box
