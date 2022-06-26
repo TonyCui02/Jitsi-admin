@@ -81,8 +81,9 @@ export default function SearchAppBar({
 
     const calcTotalSize = () => {
       removeDuplicates.forEach((item) => {
-        fileSize += item.fileSize;
-        console.log(item);
+        if (item.fileSize) {
+          fileSize += item.fileSize;
+        }
       });
       setTotalSize(fileSize);
     };
