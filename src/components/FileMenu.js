@@ -12,10 +12,6 @@ export default function FileMenu({ tourName, items, tourUrl }) {
   };
 
   useEffect(() => {
-    console.log(tourName, tourUrl, items);
-  }, []);
-
-  useEffect(() => {
     let fileSize = 0;
 
     const calcTotalSize = () => {
@@ -47,7 +43,7 @@ export default function FileMenu({ tourName, items, tourUrl }) {
           totalSize
         )}`}</Typography>
       </Grid>
-      {tourUrl !== undefined && tourUrl !== "" && (
+      {tourUrl !== undefined && tourUrl !== "" && tourUrl !== null && (
         <>
           <Divider sx={{ width: "100%" }} />
           <Grid item xs={12}>
