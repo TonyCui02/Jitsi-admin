@@ -35,10 +35,12 @@ export default function SearchAppBar({
   items,
   saveState,
   user,
+  tourUrl,
+  setTourUrl,
 }) {
   const [anchorElFile, setAnchorElFile] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [queryString, setQueryString] = useState("");
+  // const [queryString, setQueryString] = useState("");
   const [invalidItemsAlert, setInvalidItemsAlert] = useState(false);
   const [invalidText, setInvalidText] = useState("");
   const [copyText, setCopyText] = useState("Copy");
@@ -134,7 +136,7 @@ export default function SearchAppBar({
         alert("Error fetching shortened url from bitly");
         console.log("Error fetching shortened url from bitly");
       }
-      setQueryString(shortLink || "");
+      setTourUrl(shortLink || "");
       setLoadingUrl(false);
     }
   };
@@ -154,7 +156,7 @@ export default function SearchAppBar({
   };
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(queryString);
+    navigator.clipboard.writeText(tourUrl);
     setCopyText("Copied");
   };
 
@@ -236,11 +238,40 @@ export default function SearchAppBar({
                   </Typography>
                 </Grid>
                 <Divider sx={{ width: "100%" }} />
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{ py: "16px" }}>
                   <Typography variant="body1">{`Total Size: ${filesizeJS(
                     totalSize
                   )}`}</Typography>
                 </Grid>
+                {tourUrl !== "" && (
+                  <>
+                    <Divider sx={{ width: "100%" }} />
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle1">Tour URL:</Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <TextField
+                        fullWidth
+                        hiddenLabel
+                        size="small"
+                        id="outlined-read-only-input"
+                        value={tourUrl}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item sx={{ display: "flex" }} xs={3}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={() => handleCopyClick()}
+                      >
+                        {copyText}
+                      </Button>
+                    </Grid>
+                  </>
+                )}
               </Grid>
             </Menu>
             <AutosaveIndicator saving={saveState} />
@@ -332,7 +363,7 @@ export default function SearchAppBar({
                         size="small"
                         id="outlined-read-only-input"
                         // label="Read Only"
-                        value={queryString}
+                        value={tourUrl}
                         InputProps={{
                           readOnly: true,
                         }}

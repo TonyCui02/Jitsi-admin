@@ -26,7 +26,10 @@ export const lightTheme = createTheme({
       fontWeight: 500,
     },
     subtitle1: {
-      fontWeight: 500
+      fontWeight: 700,
+    },
+    subtitle2: {
+      fontWeight: 700
     }
   },
 });

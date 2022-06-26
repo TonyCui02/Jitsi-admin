@@ -21,9 +21,14 @@ const TourEditor = ({ user }) => {
   const [error, setError] = useState(null);
   const [presentMode, setPresentMode] = useState(false);
   const [tourName, setTourName] = useState("Untitled Tour");
+  const [tourUrl, setTourUrl] = useState({});
   const [saveState, setSaveState] = useState(SavingState.SAVED);
   let params = useParams();
   const tourID = params.tourId;
+
+  // useEffect(() => {
+  //   console.log(tourUrl);
+  // }, [tourUrl]);
 
   const addItem = () => {
     setItems([
@@ -100,6 +105,9 @@ const TourEditor = ({ user }) => {
       if (tourDataRes["tourName"]) {
         setTourName(tourDataRes["tourName"]);
       }
+      if (tourDataRes["tourUrl"]) {
+        setTourUrl(tourDataRes["tourUrl"]);
+      }
     } catch (err) {
       console.log(err);
       setError(err.message);
@@ -119,12 +127,13 @@ const TourEditor = ({ user }) => {
     // console.log(params.tourId);
   });
 
-  const handleDebounceFn = async (itemsData, tourName) => {
+  const handleDebounceFn = async (itemsData, tourName, tourUrl) => {
     if (
       user.username !== undefined &&
       user.username !== null &&
       user.username !== "" &&
       tourID &&
+      tourUrl &&
       itemsData &&
       !error
     ) {
@@ -135,6 +144,7 @@ const TourEditor = ({ user }) => {
         const postTourRes = await postTour(
           user.username,
           tourID,
+          tourUrl,
           itemsData,
           tourName,
           tourPreviewImg
@@ -146,15 +156,15 @@ const TourEditor = ({ user }) => {
       }
       // console.log(postTourRes);
     }
-    console.log(itemsData, tourName);
+    console.log(itemsData, tourName, tourUrl);
   };
 
   const debounceFn = useCallback(debounce(handleDebounceFn, 1000), []);
 
   useEffect(() => {
-    debounceFn(items, tourName);
+    debounceFn(items, tourName, tourUrl);
     setSaveState(SavingState.NOT_SAVED);
-  }, [items, tourName, params.tourId, debounceFn]);
+  }, [items, tourName, params.tourId, debounceFn, tourUrl]);
 
   if (loading) return <LoadingPage />;
   if (error || items === null) return <ErrorPage />;
@@ -179,6 +189,8 @@ const TourEditor = ({ user }) => {
               setPresentMode={setPresentMode}
               tourName={tourName}
               setTourName={setTourName}
+              tourUrl={tourUrl}
+              setTourUrl={setTourUrl}
               items={items}
               saveState={saveState}
               user={user}

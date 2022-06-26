@@ -91,7 +91,7 @@ async function putProfile(username, domain_url) {
   return await API.put(apiName, path, myInit);
 }
 
-async function postTour(username, tourID, itemsData, tourName, tourPreviewImg) {
+async function postTour(username, tourID, tourUrl, itemsData, tourName, tourPreviewImg) {
   const apiName = "toursApi";
   const path = "/tours";
   const myInit = {
@@ -100,6 +100,7 @@ async function postTour(username, tourID, itemsData, tourName, tourPreviewImg) {
       SK: "tour_" + tourID,
       tourData: itemsData,
       tourName: tourName,
+      tourUrl: tourUrl,
       tourPreviewImg: tourPreviewImg,
     },
   };
@@ -135,7 +136,7 @@ async function delTour(username, tourID) {
 }
 
 async function shortenUrl(url) {
-  console.log("Received url for shortening: " + url);
+  // console.log("Received url for shortening: " + url);
   const endpoint =
     `https://1o13z2dby3.execute-api.ap-southeast-2.amazonaws.com/default/shortenUrl?url=` +
     encodeURIComponent(url);
