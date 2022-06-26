@@ -196,6 +196,7 @@ const HomePage = ({ user, signOut }) => {
         tourName: item.tourName,
         tourPreviewImg: item.tourPreviewImg || "",
         itemsData: item.tourData || null,
+        tourUrl: item.tourUrl,
       }));
       console.log(userToursRes);
       console.log(fetchedTourData);

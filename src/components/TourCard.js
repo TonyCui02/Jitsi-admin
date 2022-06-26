@@ -3,6 +3,8 @@ import {
   AlertTitle,
   CardActionArea,
   Dialog,
+  IconButton,
+  Menu,
   Paper,
 } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -14,6 +16,8 @@ import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useState } from "react";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import FileMenu from "./FileMenu";
 
 const CardItem = styled("div")(({ theme }) => ({
   padding: "1rem",
@@ -52,12 +56,28 @@ const PreviewImage = styled("img")(({ theme }) => ({
   border: "1px solid #b2b2b2",
 }));
 
-const TourCard = ({ id, tourName, tourPreviewImg, deleteTour }) => {
+const TourCard = ({
+  id,
+  tourName,
+  tourPreviewImg,
+  deleteTour,
+  items,
+  tourUrl,
+}) => {
   let navigate = useNavigate();
   const [deleteTourAlert, setDeleteTourAlert] = useState(false);
+  const [anchorElFile, setAnchorElFile] = useState(null);
 
   const toggleDeleteTourAlert = () => {
     setDeleteTourAlert(!deleteTourAlert);
+  };
+
+  const handleOpenFileMenu = (event) => {
+    setAnchorElFile(event.currentTarget);
+  };
+
+  const handleCloseFileMenu = () => {
+    setAnchorElFile(null);
   };
 
   return (
@@ -86,13 +106,22 @@ const TourCard = ({ id, tourName, tourPreviewImg, deleteTour }) => {
             {tourName}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Button
             onClick={() => toggleDeleteTourAlert()}
             startIcon={<DeleteOutlineOutlinedIcon />}
           >
             Delete
           </Button>
+          <IconButton onClick={handleOpenFileMenu} aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
         </CardActions>
       </StyledCard>
       <Dialog open={deleteTourAlert} onClose={toggleDeleteTourAlert}>
@@ -106,11 +135,29 @@ const TourCard = ({ id, tourName, tourPreviewImg, deleteTour }) => {
           <Typography variant="body2" gutterBottom>
             This action cannot be undone.
           </Typography>
-          <Button color="inherit" variant="outlined" onClick={() => deleteTour(id)}>
+          <Button
+            color="inherit"
+            variant="outlined"
+            onClick={() => deleteTour(id)}
+          >
             Confirm Delete
           </Button>
         </Alert>
       </Dialog>
+      <Menu
+        sx={{ mt: "45px" }}
+        id="menu-file"
+        anchorEl={anchorElFile}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        keepMounted
+        open={Boolean(anchorElFile)}
+        onClose={handleCloseFileMenu}
+      >
+        <FileMenu tourName={tourName} items={items} tourUrl={tourUrl} />
+      </Menu>
     </CardItem>
   );
 };

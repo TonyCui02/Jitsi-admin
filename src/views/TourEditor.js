@@ -21,7 +21,7 @@ const TourEditor = ({ user }) => {
   const [error, setError] = useState(null);
   const [presentMode, setPresentMode] = useState(false);
   const [tourName, setTourName] = useState("Untitled Tour");
-  const [tourUrl, setTourUrl] = useState({});
+  const [tourUrl, setTourUrl] = useState(null);
   const [saveState, setSaveState] = useState(SavingState.SAVED);
   let params = useParams();
   const tourID = params.tourId;
