@@ -1,17 +1,13 @@
-import { useTheme } from "@emotion/react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PublishIcon from "@mui/icons-material/Publish";
 import SlideshowIcon from "@mui/icons-material/Slideshow";
 import {
   Alert,
   AlertTitle,
   Button,
-  CircularProgress,
   Dialog,
   Divider,
   Grid,
-  Icon,
   Menu,
   Skeleton,
   TextField,
@@ -20,13 +16,12 @@ import {
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
-import { getUserProfile, listFiles, putProfile, shortenUrl } from "../api/api";
-import AutosaveIndicator from "./AutosaveIndicator";
 import { v4 as uuidv4 } from "uuid";
-import filesizeJS from "filesize.js";
-import { Storage } from "aws-amplify";
+import { getUserProfile, putProfile, shortenUrl } from "../api/api";
+import AutosaveIndicator from "./AutosaveIndicator";
+import FileMenu from "./FileMenu";
 
 export default function SearchAppBar({
   setPresentMode,
@@ -46,7 +41,6 @@ export default function SearchAppBar({
   const [copyText, setCopyText] = useState("Copy");
   const [domainUrl, setDomainUrl] = useState("");
   const [loadingUrl, setLoadingUrl] = useState(true);
-  const [totalSize, setTotalSize] = useState(0);
   let params = useParams();
   const tourID = params.tourId;
 
@@ -74,24 +68,6 @@ export default function SearchAppBar({
     };
     fetchProfile();
   }, [user.username]);
-
-  useEffect(() => {
-    let fileSize = 0;
-    const removeDuplicates = items.filter(
-      (v, i, a) => a.findIndex((v2) => v2.imgUrl === v.imgUrl) === i
-    );
-
-    const calcTotalSize = () => {
-      removeDuplicates.forEach((item) => {
-        if (item.fileSize) {
-          fileSize += item.fileSize;
-        }
-      });
-      setTotalSize(fileSize);
-    };
-
-    calcTotalSize();
-  }, [items]);
 
   const closeInvalidItemsAlert = () => {
     setInvalidItemsAlert(!invalidItemsAlert);
@@ -227,52 +203,7 @@ export default function SearchAppBar({
               open={Boolean(anchorElFile)}
               onClose={handleCloseFileMenu}
             >
-              <Grid
-                container
-                spacing={2}
-                sx={{ width: "400px", py: "16px", px: "16px" }}
-              >
-                <Grid item xs={12}>
-                  <Typography gutterBottom variant="h6">
-                    {tourName || ""}
-                  </Typography>
-                </Grid>
-                <Divider sx={{ width: "100%" }} />
-                <Grid item xs={12} sx={{ py: "16px" }}>
-                  <Typography variant="body1">{`Total Size: ${filesizeJS(
-                    totalSize
-                  )}`}</Typography>
-                </Grid>
-                {tourUrl !== "" && (
-                  <>
-                    <Divider sx={{ width: "100%" }} />
-                    <Grid item xs={12}>
-                      <Typography variant="subtitle1">Tour URL:</Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <TextField
-                        fullWidth
-                        hiddenLabel
-                        size="small"
-                        id="outlined-read-only-input"
-                        value={tourUrl}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item sx={{ display: "flex" }} xs={3}>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        onClick={() => handleCopyClick()}
-                      >
-                        {copyText}
-                      </Button>
-                    </Grid>
-                  </>
-                )}
-              </Grid>
+              <FileMenu tourName={tourName} items={items} tourUrl={tourUrl} />
             </Menu>
             <AutosaveIndicator saving={saveState} />
             <Box sx={{ flexGrow: 1 }} />
