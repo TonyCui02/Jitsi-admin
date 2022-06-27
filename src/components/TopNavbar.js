@@ -41,6 +41,7 @@ export default function SearchAppBar({
   const [copyText, setCopyText] = useState("Copy");
   const [domainUrl, setDomainUrl] = useState("");
   const [loadingUrl, setLoadingUrl] = useState(true);
+  const [publishDisabled, setPublishDisabled] = useState(false);
   let params = useParams();
   const tourID = params.tourId;
 
@@ -108,12 +109,19 @@ export default function SearchAppBar({
         // queryStringRes.substring(0, queryStringRes.indexOf("?"))
         queryStringRes
       );
+      setTourUrl(shortLink || "");
+      setLoadingUrl(false);
+
+      // Disable publish for 20 seconds to limit calls to cuttly api
       if (shortLink === null || shortLink === "") {
         alert("Error fetching shortened url from bitly");
         console.log("Error fetching shortened url from bitly");
+      } else {
+        setPublishDisabled(true);
+        setTimeout(() => {
+          setPublishDisabled(false);
+        }, 20000);
       }
-      setTourUrl(shortLink || "");
-      setLoadingUrl(false);
     }
   };
 
@@ -236,6 +244,7 @@ export default function SearchAppBar({
                 variant="contained"
                 onClick={handlePublish}
                 startIcon={<PublishIcon />}
+                disabled={publishDisabled}
               >
                 Publish
               </Button>
