@@ -41,6 +41,7 @@ export default function SearchAppBar({
   const [copyText, setCopyText] = useState("Copy");
   const [domainUrl, setDomainUrl] = useState("");
   const [loadingUrl, setLoadingUrl] = useState(true);
+  const [publishDisabled, setPublishDisabled] = useState(false);
   let params = useParams();
   const tourID = params.tourId;
 
@@ -75,7 +76,7 @@ export default function SearchAppBar({
 
   const generateQueryString = (items) => {
     let randomID = uuidv4();
-    let url = `https://${domainUrl}/${randomID}?`; // previous url: 360-test1.envisage-ar.com
+    const url = `https://${domainUrl}/${randomID}?`; // previous url: 360-test1.envisage-ar.com
     let queryStringArr = [];
     for (let i = 0; i < items.length; i++) {
       queryStringArr.push(
@@ -86,13 +87,14 @@ export default function SearchAppBar({
       );
     }
     let queryString = queryStringArr.join("&");
+    const queryStringUrl = url + queryString
 
-    return url + queryString;
+    return {url, queryStringUrl};
   };
 
   const getShortenedUrl = async (link) => {
-    let encodedLink = encodeURIComponent(link);
-    let shortLink = await shortenUrl(encodedLink);
+    // let encodedLink = encodeURIComponent(link);
+    let shortLink = await shortenUrl(link);
     return shortLink;
   };
 
@@ -102,11 +104,11 @@ export default function SearchAppBar({
       setInvalidItemsAlert(true);
     } else {
       setAnchorElUser(event.currentTarget);
-      let queryStringRes = generateQueryString(visibleItems);
+      const {url, queryStringUrl} = generateQueryString(visibleItems);
       // setQueryString(queryStringRes);
       const shortLink = await getShortenedUrl(
         // queryStringRes.substring(0, queryStringRes.indexOf("?"))
-        queryStringRes
+        url
       );
       if (shortLink === null || shortLink === "") {
         alert("Error fetching shortened url from bitly");
@@ -114,6 +116,12 @@ export default function SearchAppBar({
       }
       setTourUrl(shortLink || "");
       setLoadingUrl(false);
+      // disable publish button to avoid spamming to cuttly api
+      setPublishDisabled(true);
+        setTimeout(() => {
+          setPublishDisabled(false);
+        }, 10000);
+      window.open(queryStringUrl, '_blank', 'noopener,noreferrer')
     }
   };
 
@@ -157,19 +165,6 @@ export default function SearchAppBar({
     }
     return true;
   };
-
-  // const handleDebounceFn = (input) => {
-  //   console.log(input);
-  // };
-
-  // const debounceFn = useCallback(debounce(handleDebounceFn, 1000), []);
-
-  // const updateTourName = (e) => {
-  //   setTourName(e.target.value);
-  //   debounceFn(e.target.value);
-  // };
-
-  // const debouncedTourName = debounce(updateTourName, 100);
 
   return (
     <>
@@ -236,6 +231,7 @@ export default function SearchAppBar({
                 variant="contained"
                 onClick={handlePublish}
                 startIcon={<PublishIcon />}
+                disabled={publishDisabled}
               >
                 Publish
               </Button>

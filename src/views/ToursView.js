@@ -25,6 +25,8 @@ const ToursView = ({ tours, deleteTour, deleteDbTour, user }) => {
                   deleteTour(item.id);
                   deleteDbTour(user.username, item.id);
                 }}
+                items={item.itemsData}
+                tourUrl={item.tourUrl}
               />
             ))
           ) : (

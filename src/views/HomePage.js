@@ -196,6 +196,7 @@ const HomePage = ({ user, signOut }) => {
         tourName: item.tourName,
         tourPreviewImg: item.tourPreviewImg || "",
         itemsData: item.tourData || null,
+        tourUrl: item.tourUrl,
       }));
       console.log(userToursRes);
       console.log(fetchedTourData);
@@ -210,16 +211,9 @@ const HomePage = ({ user, signOut }) => {
 
   useEffect(() => {
     console.log("mount");
-    // if (localStorage.getItem("tours")) {
-    //   console.log("user already has saved data");
-    //   const savedToursDate = JSON.parse(localStorage.getItem("tours"));
-    //   console.log("saved data: " + JSON.stringify(savedToursDate));
-    //   setTours(savedToursDate);
-    // }
     fetchUserTours();
   }, []);
   useEffect(() => {
-    // localStorage.setItem("tours", JSON.stringify(tours));
   }, [tours]);
   useEffect(() => {
     if (createdTour) {
@@ -403,39 +397,6 @@ const HomePage = ({ user, signOut }) => {
       </Drawer>
       <Main open={open} sx={{ height: "100vh" }}>
         <DrawerHeader />
-        {/* <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography px="16px" variant="h3">
-              Tours
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Box display="flex" sx={{ flexWrap: "wrap" }}>
-              {tours.length > 0 ? (
-                tours.map((item) => (
-                  <TourCard
-                    key={item.id}
-                    id={item.id}
-                    tourName={item.tourName}
-                    tourPreviewImg={item.tourPreviewImg}
-                    deleteTour={() => {
-                      //   deleteTour(item.id);
-                      //   deleteDbTour(user.username, item.id);
-                    }}
-                  />
-                ))
-              ) : (
-                <Box px="16px">
-                  <Typography variant="h6">No tours yet...</Typography>
-                  <Typography variant="subtitle1" color="text.secondary">
-                    Create a tour to get started
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          </Grid> */}
-        {/* </Grid> */}
-
         <Routes>
           <Route
             path="/"

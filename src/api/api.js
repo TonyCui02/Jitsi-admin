@@ -91,7 +91,14 @@ async function putProfile(username, domain_url) {
   return await API.put(apiName, path, myInit);
 }
 
-async function postTour(username, tourID, tourUrl, itemsData, tourName, tourPreviewImg) {
+async function postTour(
+  username,
+  tourID,
+  tourUrl,
+  itemsData,
+  tourName,
+  tourPreviewImg
+) {
   const apiName = "toursApi";
   const path = "/tours";
   const myInit = {
@@ -136,14 +143,16 @@ async function delTour(username, tourID) {
 }
 
 async function shortenUrl(url) {
-  // console.log("Received url for shortening: " + url);
-  const endpoint =
-    `https://1o13z2dby3.execute-api.ap-southeast-2.amazonaws.com/default/shortenUrl?url=` +
-    encodeURIComponent(url);
+  console.log("Received url for shortening: " + url);
+  const endpoint = `https://1o13z2dby3.execute-api.ap-southeast-2.amazonaws.com/default/shortenUrl`;
+  const encoded = encodeURIComponent(url)
+  console.log(encoded)
+  console.log(encoded.length)
 
   try {
-    const urlResponse = await axios.get(endpoint);
-
+    const urlResponse = await axios.post(endpoint, {
+      url: encoded,
+    });
     const data = urlResponse.data;
 
     console.log("Received data from url shortening lambda: ");

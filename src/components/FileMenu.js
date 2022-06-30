@@ -13,16 +13,19 @@ export default function FileMenu({ tourName, items, tourUrl }) {
 
   useEffect(() => {
     let fileSize = 0;
-    const removeDuplicates = items.filter(
-      (v, i, a) => a.findIndex((v2) => v2.imgUrl === v.imgUrl) === i
-    );
 
     const calcTotalSize = () => {
-      removeDuplicates.forEach((item) => {
-        if (item.fileSize) {
-          fileSize += item.fileSize;
-        }
-      });
+      if (items) {
+        const removeDuplicates = items.filter(
+          (v, i, a) => a.findIndex((v2) => v2.imgUrl === v.imgUrl) === i
+        );
+        removeDuplicates.forEach((item) => {
+          if (item.fileSize) {
+            fileSize += item.fileSize;
+          }
+        });
+      }
+
       setTotalSize(fileSize);
     };
 
@@ -41,7 +44,7 @@ export default function FileMenu({ tourName, items, tourUrl }) {
           totalSize
         )}`}</Typography>
       </Grid>
-      {tourUrl !== "" && (
+      {tourUrl !== "" && tourUrl !== undefined && (
         <>
           <Divider sx={{ width: "100%" }} />
           <Grid item xs={12}>
