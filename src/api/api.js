@@ -146,8 +146,8 @@ async function shortenUrl(url) {
   console.log("Received url for shortening: " + url);
   const endpoint = `https://1o13z2dby3.execute-api.ap-southeast-2.amazonaws.com/default/shortenUrl`;
   const encoded = encodeURIComponent(url)
-  console.log(encoded)
-  console.log(encoded.length)
+  // console.log(encoded)
+  // console.log(encoded.length)
 
   try {
     const urlResponse = await axios.post(endpoint, {
