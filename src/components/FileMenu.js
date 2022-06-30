@@ -25,7 +25,6 @@ export default function FileMenu({ tourName, items, tourUrl }) {
           }
         });
       }
-
       setTotalSize(fileSize);
     };
 

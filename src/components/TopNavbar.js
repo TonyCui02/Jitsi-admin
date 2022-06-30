@@ -105,22 +105,23 @@ export default function SearchAppBar({
     } else {
       setAnchorElUser(event.currentTarget);
       const {url, queryStringUrl} = generateQueryString(visibleItems);
-      // setQueryString(queryStringRes);
-      const shortLink = await getShortenedUrl(
-        // queryStringRes.substring(0, queryStringRes.indexOf("?"))
-        url
-      );
-      if (shortLink === null || shortLink === "") {
-        alert("Error fetching shortened url from bitly");
-        console.log("Error fetching shortened url from bitly");
-      }
-      setTourUrl(shortLink || "");
-      setLoadingUrl(false);
+
       // disable publish button to avoid spamming to cuttly api
       setPublishDisabled(true);
         setTimeout(() => {
           setPublishDisabled(false);
         }, 10000);
+
+      const shortLink = await getShortenedUrl(
+        url
+      );
+
+      if (shortLink === null || shortLink === "") {
+        alert("Error fetching shortened url from bitly");
+        console.log("Error fetching shortened url from bitly");
+      } 
+      setTourUrl(shortLink || "");
+      setLoadingUrl(false);
       window.open(queryStringUrl, '_blank', 'noopener,noreferrer')
     }
   };
