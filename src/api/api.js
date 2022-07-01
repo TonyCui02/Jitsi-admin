@@ -157,10 +157,15 @@ async function shortenUrl(url) {
     console.log("Received data from url shortening lambda: ");
     console.log(data);
 
-    if (urlResponse.status === 200 && data.url.status === 7) {
-      return data.url.shortLink;
+    const cuttlyStatus = data.url.status;
+    if (urlResponse.status === 200 && cuttlyStatus === 7) {
+      return { status: cuttlyStatus, url: data.url.shortLink };
     } else {
-      return null;
+      return {
+        status: cuttlyStatus,
+        url: "",
+        error: cuttlyErrors[cuttlyStatus],
+      };
     }
   } catch (error) {
     console.error("Error occured due to: " + error);

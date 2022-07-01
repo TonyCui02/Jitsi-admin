@@ -87,15 +87,15 @@ export default function SearchAppBar({
       );
     }
     let queryString = queryStringArr.join("&");
-    const queryStringUrl = url + queryString
+    const queryStringUrl = url + queryString;
 
-    return {url, queryStringUrl};
+    return { url, queryStringUrl };
   };
 
   const getShortenedUrl = async (link) => {
     // let encodedLink = encodeURIComponent(link);
-    let shortLink = await shortenUrl(link);
-    return shortLink;
+    let response = await shortenUrl(link);
+    return response;
   };
 
   const handlePublish = async (event) => {
@@ -104,25 +104,24 @@ export default function SearchAppBar({
       setInvalidItemsAlert(true);
     } else {
       setAnchorElUser(event.currentTarget);
-      const {url, queryStringUrl} = generateQueryString(visibleItems);
+      const { url, queryStringUrl } = generateQueryString(visibleItems);
 
       // disable publish button to avoid spamming to cuttly api
       setPublishDisabled(true);
-        setTimeout(() => {
-          setPublishDisabled(false);
-        }, 10000);
+      setTimeout(() => {
+        setPublishDisabled(false);
+      }, 10000);
 
-      const shortLink = await getShortenedUrl(
-        url
-      );
+      const response = await getShortenedUrl(url);
 
-      if (shortLink === null || shortLink === "") {
-        alert("Error fetching shortened url from bitly");
-        console.log("Error fetching shortened url from bitly");
-      } 
-      setTourUrl(shortLink || "");
+      if (response.status !== 7 || !response.url || response.error) {
+        alert("status: " + response.status + ", " + response.error);
+        console.log("status: " + response.status + ", " + response.error);
+      } else {
+        window.open(queryStringUrl, "_blank", "noopener,noreferrer");
+      }
+      setTourUrl(response.url || "");
       setLoadingUrl(false);
-      window.open(queryStringUrl, '_blank', 'noopener,noreferrer')
     }
   };
 
