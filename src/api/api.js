@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API, Storage } from "aws-amplify";
+import { cuttlyErrors } from "./cuttlyErrors.js";
 
 async function getPresignedUrl(file, username, tourID) {
   try {
@@ -144,22 +145,20 @@ async function delTour(username, tourID) {
 
 async function shortenUrl(url) {
   console.log("Received url for shortening: " + url);
-  const endpoint = `https://1o13z2dby3.execute-api.ap-southeast-2.amazonaws.com/default/shortenUrl`;
-  const encoded = encodeURIComponent(url)
+  const endpoint = `https://1o13z2dby3.execute-api.ap-southeast-2.amazonaws.com/default/shortenUrl?url=`;
+  const encoded = encodeURIComponent(url);
   // console.log(encoded)
   // console.log(encoded.length)
 
   try {
-    const urlResponse = await axios.post(endpoint, {
-      url: encoded,
-    });
+    const urlResponse = await axios.post(endpoint + encoded);
     const data = urlResponse.data;
 
     console.log("Received data from url shortening lambda: ");
     console.log(data);
 
-    if (data.status === 200 && data?.response?.url?.status === 7) {
-      return data?.response?.url?.shortLink;
+    if (urlResponse.status === 200 && data.url.status === 7) {
+      return data.url.shortLink;
     } else {
       return null;
     }
