@@ -41,6 +41,8 @@ const MediaCardWrapper = memo(
     moveItemDown,
     addItemAfter,
     copyItem,
+    uploadStack,
+    setUploadStack
   }) => {
     const myRef = useRef(null);
     const [titleError, setTitleError] = useState(false);
@@ -198,6 +200,8 @@ const MediaCardWrapper = memo(
             imgUrl={imgUrl}
             mediaType={mediaType}
             fileSize={fileSize}
+            uploadStack={uploadStack}
+            setUploadStack={setUploadStack}
           />
           <Box sx={{ display: "flex", flexDirection: "column", flex: "1" }}>
             <CardContent sx={{ display: "flex", flexDirection: "column" }}>

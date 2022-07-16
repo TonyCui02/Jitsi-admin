@@ -32,6 +32,7 @@ export default function SearchAppBar({
   user,
   tourUrl,
   setTourUrl,
+  uploading
 }) {
   const [anchorElFile, setAnchorElFile] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -231,7 +232,7 @@ export default function SearchAppBar({
                 variant="contained"
                 onClick={handlePublish}
                 startIcon={<PublishIcon />}
-                disabled={publishDisabled}
+                disabled={publishDisabled || uploading}
               >
                 Publish
               </Button>

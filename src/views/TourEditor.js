@@ -25,6 +25,8 @@ const TourEditor = ({ user }) => {
   const [saveState, setSaveState] = useState(SavingState.SAVED);
   let params = useParams();
   const tourID = params.tourId;
+  const [uploadStack, setUploadStack] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   // useEffect(() => {
   //   console.log(tourUrl);
@@ -95,37 +97,40 @@ const TourEditor = ({ user }) => {
     ]);
   }, []); // No dependencies
 
-  const fetchItems = async () => {
-    try {
-      const tourDataRes = await getTour(user.username, tourID);
-      console.log(tourDataRes);
-      if (tourDataRes["tourData"]) {
-        setItems(tourDataRes["tourData"]);
-      }
-      if (tourDataRes["tourName"]) {
-        setTourName(tourDataRes["tourName"]);
-      }
-      if (tourDataRes["tourUrl"]) {
-        setTourUrl(tourDataRes["tourUrl"]);
-      }
-    } catch (err) {
-      console.log(err);
-      setError(err.message);
-      setItems(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const tourDataRes = await getTour(user.username, tourID);
+        console.log(tourDataRes);
+        if (tourDataRes["tourData"]) {
+          setItems(tourDataRes["tourData"]);
+        }
+        if (tourDataRes["tourName"]) {
+          setTourName(tourDataRes["tourName"]);
+        }
+        if (tourDataRes["tourUrl"]) {
+          setTourUrl(tourDataRes["tourUrl"]);
+        }
+      } catch (err) {
+        console.log(err);
+        setError(err.message);
+        setItems(null);
+      } finally {
+        setLoading(false);
+      }
+    };
     console.log("mount");
 
     fetchItems();
   }, []);
 
   useEffect(() => {
-    // console.log(params.tourId);
-  });
+    if (uploadStack.length > 0) {
+      setUploading(true);
+    } else {
+      setUploading(false);
+    }
+  }, [uploadStack, uploading]);
 
   const handleDebounceFn = async (itemsData, tourName, tourUrl) => {
     if (
@@ -193,6 +198,7 @@ const TourEditor = ({ user }) => {
               items={items}
               saveState={saveState}
               user={user}
+              uploading={uploading}
             />
             <Container maxWidth="md">
               <Grid sx={{ paddingTop: "48px" }} container>
@@ -218,6 +224,8 @@ const TourEditor = ({ user }) => {
                       // updateItemTitle={updateItemTitle}
                       updateItem={updateItem}
                       copyItem={copyItem}
+                      uploadStack={uploadStack}
+                      setUploadStack={setUploadStack}
                     />
                   </Grid>
                 ))}
