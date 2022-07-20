@@ -5,8 +5,8 @@ const UrlContainer = ({ tourUrl, fullUrl }) => {
     const [tourUrlCopyText, setTourUrlCopyText] = useState("Copy");
     const [fullUrlCopyText, setFullUrlCopyText] = useState("Copy");
 
-    const handleCopyUrl = (url, setUrl) => {
-        navigator.clipboard.writeText(url);
+    const handleCopyUrl = (copyUrl, setUrl) => {
+        navigator.clipboard.writeText(copyUrl);
         setUrl("Copied");
         setTimeout(() => {
             setUrl("Copy");
@@ -37,7 +37,7 @@ const UrlContainer = ({ tourUrl, fullUrl }) => {
                         <Button
                             fullWidth
                             variant="outlined"
-                            onClick={() => handleCopyUrl(tourUrlCopyText, setTourUrlCopyText)}
+                            onClick={() => handleCopyUrl(tourUrl, setTourUrlCopyText)}
                         >
                             {tourUrlCopyText}
                         </Button>
@@ -47,7 +47,7 @@ const UrlContainer = ({ tourUrl, fullUrl }) => {
             {
                 fullUrl !== "" && fullUrl !== undefined && (
                     <>
-                    <Divider sx={{ width: "100%", py: "8px" }} />
+                        <Divider sx={{ width: "100%", py: "8px" }} />
                         <Grid item xs={12}>
                             <Typography variant="subtitle1">Full URL:</Typography>
                         </Grid>
@@ -67,7 +67,7 @@ const UrlContainer = ({ tourUrl, fullUrl }) => {
                             <Button
                                 fullWidth
                                 variant="outlined"
-                                onClick={() => handleCopyUrl(fullUrlCopyText, setFullUrlCopyText)}
+                                onClick={() => handleCopyUrl(fullUrl, setFullUrlCopyText)}
                             >
                                 {fullUrlCopyText}
                             </Button>

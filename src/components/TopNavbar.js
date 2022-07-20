@@ -125,7 +125,7 @@ export default function SearchAppBar({
         window.open(queryStringUrl, "_blank", "noopener,noreferrer");
       }
       setFullUrl(queryStringUrl);
-      console.log(queryStringUrl);
+      // console.log(queryStringUrl);
       setTourUrl(response.url || "");
       setLoadingUrl(false);
     }
