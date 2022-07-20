@@ -1,14 +1,21 @@
 import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import filesizeJS from "filesize.js";
+import UrlContainer from "./UrlContainer"
 
-export default function FileMenu({ tourName, items, tourUrl }) {
+export default function FileMenu({ tourName, items, tourUrl, fullUrl }) {
   const [totalSize, setTotalSize] = useState(0);
-  const [copyText, setCopyText] = useState("Copy");
+  const [tourUrlCopyText, setTourUrlCopyText] = useState("Copy");
+  const [fullUrlCopyText, setFullUrlCopyText] = useState("Copy");
 
-  const handleCopyClick = () => {
+  const handleCopyShortUrl = () => {
     navigator.clipboard.writeText(tourUrl);
-    setCopyText("Copied");
+    setTourUrlCopyText("Copied");
+  };
+
+  const handleCopyFullUrl = () => {
+    navigator.clipboard.writeText(fullUrl);
+    setFullUrlCopyText("Copied");
   };
 
   useEffect(() => {
@@ -38,40 +45,12 @@ export default function FileMenu({ tourName, items, tourUrl }) {
         </Typography>
       </Grid>
       <Divider sx={{ width: "100%" }} />
-      <Grid item xs={12} sx={{ py: "16px" }}>
+      <Grid item xs={12} sx={{ py: "8px" }}>
         <Typography variant="body1">{`Total Size: ${filesizeJS(
           totalSize
         )}`}</Typography>
       </Grid>
-      {tourUrl !== "" && tourUrl !== undefined && (
-        <>
-          <Divider sx={{ width: "100%" }} />
-          <Grid item xs={12}>
-            <Typography variant="subtitle1">Tour URL:</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <TextField
-              fullWidth
-              hiddenLabel
-              size="small"
-              id="outlined-read-only-input"
-              value={tourUrl}
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item sx={{ display: "flex" }} xs={3}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => handleCopyClick()}
-            >
-              {copyText}
-            </Button>
-          </Grid>
-        </>
-      )}
+      <UrlContainer tourUrl={tourUrl} fullUrl={fullUrl} />
     </Grid>
   );
 }

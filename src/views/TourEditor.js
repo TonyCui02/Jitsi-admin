@@ -22,6 +22,7 @@ const TourEditor = ({ user }) => {
   const [presentMode, setPresentMode] = useState(false);
   const [tourName, setTourName] = useState("Untitled Tour");
   const [tourUrl, setTourUrl] = useState("");
+  const [fullUrl, setFullUrl] = useState("");
   const [saveState, setSaveState] = useState(SavingState.SAVED);
   let params = useParams();
   const tourID = params.tourId;
@@ -111,6 +112,9 @@ const TourEditor = ({ user }) => {
         if (tourDataRes["tourUrl"]) {
           setTourUrl(tourDataRes["tourUrl"]);
         }
+        if (tourDataRes["fullUrl"]) {
+          setFullUrl(tourDataRes["fullUrl"]);
+        }
       } catch (err) {
         console.log(err);
         setError(err.message);
@@ -132,7 +136,7 @@ const TourEditor = ({ user }) => {
     }
   }, [uploadStack, uploading]);
 
-  const handleDebounceFn = async (itemsData, tourName, tourUrl) => {
+  const handleDebounceFn = async (itemsData, tourName, tourUrl, fullUrl) => {
     if (
       user.username !== undefined &&
       user.username !== null &&
@@ -149,6 +153,7 @@ const TourEditor = ({ user }) => {
           user.username,
           tourID,
           tourUrl,
+          fullUrl,
           itemsData,
           tourName,
           tourPreviewImg
@@ -160,15 +165,15 @@ const TourEditor = ({ user }) => {
       }
       // console.log(postTourRes);
     }
-    console.log(itemsData, tourName, tourUrl);
+    console.log(itemsData, tourName, tourUrl, fullUrl);
   };
 
   const debounceFn = useCallback(debounce(handleDebounceFn, 1000), []);
 
   useEffect(() => {
-    debounceFn(items, tourName, tourUrl);
+    debounceFn(items, tourName, tourUrl, fullUrl);
     setSaveState(SavingState.NOT_SAVED);
-  }, [items, tourName, params.tourId, debounceFn, tourUrl]);
+  }, [items, tourName, params.tourId, debounceFn, tourUrl, fullUrl]);
 
   if (loading) return <LoadingPage />;
   if (error || items === null) return <ErrorPage />;
@@ -195,6 +200,8 @@ const TourEditor = ({ user }) => {
               setTourName={setTourName}
               tourUrl={tourUrl}
               setTourUrl={setTourUrl}
+              fullUrl={fullUrl}
+              setFullUrl={setFullUrl}
               items={items}
               saveState={saveState}
               user={user}

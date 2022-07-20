@@ -11,7 +11,6 @@ import {
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { getUserProfile, putProfile } from "../api/api";
-import TourCard from "../components/TourCard";
 
 const AccountSettingsView = ({ user }) => {
   const [domainUrl, setDomainUrl] = useState("");

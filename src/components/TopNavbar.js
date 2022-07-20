@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getUserProfile, putProfile, shortenUrl } from "../api/api";
 import AutosaveIndicator from "./AutosaveIndicator";
 import FileMenu from "./FileMenu";
+import UrlContainer from "./UrlContainer";
 
 export default function SearchAppBar({
   setPresentMode,
@@ -32,6 +33,8 @@ export default function SearchAppBar({
   user,
   tourUrl,
   setTourUrl,
+  fullUrl,
+  setFullUrl,
   uploading
 }) {
   const [anchorElFile, setAnchorElFile] = useState(null);
@@ -121,6 +124,8 @@ export default function SearchAppBar({
       } else {
         window.open(queryStringUrl, "_blank", "noopener,noreferrer");
       }
+      setFullUrl(queryStringUrl);
+      console.log(queryStringUrl);
       setTourUrl(response.url || "");
       setLoadingUrl(false);
     }
@@ -199,7 +204,7 @@ export default function SearchAppBar({
               open={Boolean(anchorElFile)}
               onClose={handleCloseFileMenu}
             >
-              <FileMenu tourName={tourName} items={items} tourUrl={tourUrl} />
+              <FileMenu tourName={tourName} items={items} tourUrl={tourUrl} fullUrl={fullUrl} />
             </Menu>
             <AutosaveIndicator saving={saveState} />
             <Box sx={{ flexGrow: 1 }} />
@@ -267,7 +272,7 @@ export default function SearchAppBar({
                     )}
                   </Grid>
                   <Divider sx={{ width: "100%" }} />
-                  <Grid item xs={12}>
+                  <Grid item xs={12} sx={{ py: "16px" }}>
                     {loadingUrl ? (
                       <Skeleton />
                     ) : (
@@ -281,34 +286,11 @@ export default function SearchAppBar({
                       </Typography>
                     )}
                   </Grid>
-                  <Grid item xs={9}>
-                    {loadingUrl ? (
-                      <Skeleton />
-                    ) : (
-                      <TextField
-                        fullWidth
-                        hiddenLabel
-                        size="small"
-                        id="outlined-read-only-input"
-                        // label="Read Only"
-                        value={tourUrl}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item sx={{ display: "flex" }} xs={3}>
-                    {loadingUrl ? null : (
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        onClick={() => handleCopyClick()}
-                      >
-                        {copyText}
-                      </Button>
-                    )}
-                  </Grid>
+                  {loadingUrl ? (
+                    <Skeleton />
+                  ) :
+                    <UrlContainer tourUrl={tourUrl} fullUrl={fullUrl} />
+                  }
                 </Grid>
               </Menu>
             </Box>

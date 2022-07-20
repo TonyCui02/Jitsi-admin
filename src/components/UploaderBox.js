@@ -260,7 +260,7 @@ const UploaderBox = ({
           >
             <input type="file" name="img" {...getInputProps()} />
             <Paper
-              {...getRootProps({ classNameName: "dropzone" })}
+              {...getRootProps({ classnamename: "dropzone" })}
               elevation={0}
               sx={{
                 height: "100%",

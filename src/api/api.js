@@ -96,6 +96,7 @@ async function postTour(
   username,
   tourID,
   tourUrl,
+  fullUrl,
   itemsData,
   tourName,
   tourPreviewImg
@@ -109,6 +110,7 @@ async function postTour(
       tourData: itemsData,
       tourName: tourName,
       tourUrl: tourUrl,
+      fullUrl: fullUrl,
       tourPreviewImg: tourPreviewImg,
     },
   };

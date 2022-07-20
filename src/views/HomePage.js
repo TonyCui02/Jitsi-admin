@@ -38,7 +38,6 @@ import {
   Link as RouterLink,
   matchPath,
 } from "react-router-dom";
-import TourCard from "../components/TourCard";
 import { getUserTours, putTour, delTour } from "../api/api";
 import ToursView from "./ToursView";
 import AccountSettingsView from "./AccountSettingsView";
@@ -197,6 +196,7 @@ const HomePage = ({ user, signOut }) => {
         tourPreviewImg: item.tourPreviewImg || "",
         itemsData: item.tourData || null,
         tourUrl: item.tourUrl,
+        fullUrl: item.fullUrl
       }));
       console.log(userToursRes);
       console.log(fetchedTourData);

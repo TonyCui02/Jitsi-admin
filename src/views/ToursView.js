@@ -27,6 +27,7 @@ const ToursView = ({ tours, deleteTour, deleteDbTour, user }) => {
                 }}
                 items={item.itemsData}
                 tourUrl={item.tourUrl}
+                fullUrl={item.fullUrl}
               />
             ))
           ) : (

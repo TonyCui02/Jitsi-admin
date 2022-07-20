@@ -63,6 +63,7 @@ const TourCard = ({
   deleteTour,
   items,
   tourUrl,
+  fullUrl
 }) => {
   let navigate = useNavigate();
   const [deleteTourAlert, setDeleteTourAlert] = useState(false);
@@ -156,7 +157,7 @@ const TourCard = ({
         open={Boolean(anchorElFile)}
         onClose={handleCloseFileMenu}
       >
-        <FileMenu tourName={tourName} items={items} tourUrl={tourUrl} />
+        <FileMenu tourName={tourName} items={items} tourUrl={tourUrl} fullUrl={fullUrl}/>
       </Menu>
     </CardItem>
   );
