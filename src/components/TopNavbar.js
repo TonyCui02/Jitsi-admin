@@ -18,7 +18,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { useEffect, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 import { getUserProfile, putProfile, shortenUrl } from "../api/api";
 import AutosaveIndicator from "./AutosaveIndicator";
 import FileMenu from "./FileMenu";
@@ -79,7 +79,7 @@ export default function SearchAppBar({
   };
 
   const generateQueryString = (items) => {
-    let randomID = uuidv4();
+    let randomID = nanoid(10); // generate random Jitsi room id using 10 characters
     const url = `https://${domainUrl}/${randomID}?`; // previous url: 360-test1.envisage-ar.com
     let queryStringArr = [];
     for (let i = 0; i < items.length; i++) {
